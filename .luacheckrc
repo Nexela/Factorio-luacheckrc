@@ -675,7 +675,7 @@ stds.factorio_defines = {
                                 "rail_signal",
                                 "roboport",
                                 "storage_tank",
-                                "train-stop",
+                                "train_stop",
                                 "transport_belt",
                             },
                         },
@@ -1028,7 +1028,7 @@ stds.factorio_defines = {
                     fields = {
                         "not_shooting",
                         "shooting_enemies",
-                        "shooting_seleted",
+                        "shooting_selected",
                     },
                 },
                 signal_state = {
