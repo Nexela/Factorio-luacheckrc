@@ -58,7 +58,7 @@ not_globals = {"coroutine", "io", "socket"}
 -- factorio_defines -- Factorio global defines used in both stages.
 -- stdlib -- stdlib globals used in data and control stages
 -- stdlib_control -- stdlib globals used in control stage only
--- stdlib_date -- stdlib globals used in the data stage only
+-- stdlib_data -- stdlib globals used in the data stage only
 
 -- Line length to use
 local LINE_LENGTH = 200
@@ -70,10 +70,21 @@ std = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
 max_line_length = LINE_LENGTH
 
 -------------------------------------------------------------------------------
---[[Busted]]--
+--[[Factorio STDLIB Busted]]--
 -------------------------------------------------------------------------------
---TODO set up busted checks
+files['**/spec/**'] = {
+    std = "lua52c+busted+stdlib_busted+factorio_defines+factorio_control+stdlib_control+stdlib",
+    --ignore = {"0..", "1..", "2..", "3..", "4..", "5..", "6..", "7..", "8..", "9..", "fail_if_missing"}
+}
 
+stds.stdlib_busted = {
+    globals = {
+        "Event", "Gui", "Config", "Logger", "Area", "Position", "Tile", "Chunk", "Data",
+        "Recipe", "Color", "Entity", "Inventory", "Trains", "Core", "Game", "Surface",
+        "Time",
+    },
+    --other_globals = {"data", "control", "test_function", "game", "train", "entity"}
+}
 -------------------------------------------------------------------------------
 --[[Prototypes]]--
 -------------------------------------------------------------------------------
@@ -406,7 +417,18 @@ stds.stdlib_control = {
     -- STDLIB globals
     -- These need to be reworked in stdlib to not be globals.
     globals = {
-        "Event",
+        Event = {
+            other_fields = true,
+            fields = {
+                core_events = {
+                    read_only = true,
+                    other_fields = false,
+                    fields = {
+                        "init", "configuration_changed", "load", "_register"
+                    },
+                },
+            },
+        },
         "Gui",
         "Config",
         "Logger",
@@ -1077,17 +1099,25 @@ stds.factorio_defines = {
                 },
                 colors = {
                     other_fields = true,
-                    read_only = false,
                 },
 
                 anticolors = {
                     other_fields = true,
-                    read_only = false,
                 },
 
                 lightcolors = {
                     other_fields = true,
-                    read_only = false,
+                },
+                time = {
+                    fields = {
+                        "second",
+                        "minute",
+                        "hour",
+                        "day",
+                        "week",
+                        "month",
+                        "year",
+                    }
                 },
             },
         }
