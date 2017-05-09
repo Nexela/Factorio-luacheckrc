@@ -131,6 +131,7 @@ files["**/stdlib/game.lua"] = std_stdlib_control
 files["**/stdlib/surface.lua"] = std_stdlib_control
 files["**/stdlib/time.lua"] = std_stdlib_control
 
+files["**/stdlib/utils/"] = std_stdlib_control
 files["**/stdlib/area/"] = std_stdlib_control
 files["**/stdlib/config/"] = std_stdlib_control
 files["**/stdlib/entity/"] = std_stdlib_control
@@ -303,6 +304,16 @@ stds.factorio_control = {
                     read_only = true,
                     other_fields = true
                 },
+                recipe_prototypes = {
+                    --string dictionary - > luaRecipePrototype
+                    read_only = true,
+                    other_fields = true
+                },
+                technology_prototypes = {
+                    --string dictionary - > luaTechnologyPrototype
+                    read_only = true,
+                    other_fields = true
+                },
                 damage_prototypes = {
                     --string dictionary - > luaDamagePrototype
                     read_only = true,
@@ -347,17 +358,45 @@ stds.factorio_control = {
 }
 
 stds.factorio_data = {
-    globals = {
-        -- @data@: Table used to instantiate all game object prototypes. Use data:extend to write new data to it.
-        "data",
-    },
+
     read_globals = {
+        data = {
+            fields = {
+                raw = {
+                    other_fields = true,
+                    read_only = false
+                },
+                "extend"
+            },
+        },
 
         settings = {
             fields = {
                 "startup",
                 "global",
                 "player",
+            },
+        },
+
+        util = {
+            fields = {
+                "by_pixel",
+                "distance",
+                "findfirstentity",
+                "positiontostr",
+                "formattime",
+                "moveposition",
+                "oppositedirection",
+                "ismoduleavailable",
+                "multiplystripes",
+                "format_number",
+                "increment",
+                table = {
+                    fields = {
+                        "compare",
+                        "deepcopy"
+                    },
+                },
             },
         },
 
@@ -429,7 +468,20 @@ stds.stdlib_control = {
                 },
             },
         },
-        "Gui",
+        Gui = {
+            --other_fields = true,
+            fields = {
+                on_click = {
+                    read_only = true,
+                },
+                on_text_changed = {
+                    read_only = true,
+                },
+                on_checked_state_changed = {
+                    read_only = true,
+                }
+            },
+        },
         "Config",
         "Logger",
     },
