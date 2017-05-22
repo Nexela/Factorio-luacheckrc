@@ -140,7 +140,9 @@ files["**/stdlib/gui/"] = std_stdlib_control
 files["**/stdlib/log/"] = std_stdlib_control
 files["**/stdlib/trains/"] = std_stdlib_control
 
+files["**/stdlib/prototype/"] = std_stdlib_data
 files["**/stdlib/data/"] = std_stdlib_data
+files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
 
 -------------------------------------------------------------------------------
 --[[STDS]]--
@@ -408,6 +410,10 @@ stds.factorio_data = {
         bobmods = {
             other_fields = true
         },
+
+        mods = {
+            other_fields = true
+        }
     }
 }
 
@@ -469,7 +475,6 @@ stds.stdlib_control = {
             },
         },
         Gui = {
-            --other_fields = true,
             fields = {
                 on_click = {
                     read_only = true,
@@ -479,6 +484,12 @@ stds.stdlib_control = {
                 },
                 on_checked_state_changed = {
                     read_only = true,
+                },
+                on_elem_changed = {
+                    read_only = true,
+                },
+                on_selection_state_changed = {
+                    read_only = true
                 }
             },
         },
