@@ -1160,15 +1160,25 @@ stds.factorio_defines = {
                         "red",
                     }
                 },
+                -- Deprecated
                 colors = {
                     other_fields = true,
                 },
-
+                -- Deprecated
                 anticolors = {
                     other_fields = true,
                 },
-
+                -- Deprecated
                 lightcolors = {
+                    other_fields = true,
+                },
+                color = {
+                    other_fields = true,
+                },
+                anticolor = {
+                    other_fields = true,
+                },
+                lightcolor = {
                     other_fields = true,
                 },
                 time = {
