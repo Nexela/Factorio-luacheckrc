@@ -439,9 +439,10 @@ stds.stdlib = {
                 "avg",
                 "merge",
                 "deepcopy",
-                "value",
+                "values",
                 "keys",
                 "remove_keys",
+                "invert"
             },
         },
         string = {
