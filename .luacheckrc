@@ -442,7 +442,8 @@ stds.stdlib = {
                 "values",
                 "keys",
                 "remove_keys",
-                "invert"
+                "invert",
+                "count_keys",
             },
         },
         string = {
