@@ -79,11 +79,8 @@ files['**/spec/**'] = {
 
 stds.stdlib_busted = {
     globals = {
-        "Event", "Gui", "Config", "Logger", "Area", "Position", "Tile", "Chunk", "Data",
-        "Recipe", "Color", "Entity", "Inventory", "Trains", "Core", "Game", "Surface",
-        "Time",
+        "Event", "Gui", "Config", "Logger", "Core",
     },
-    --other_globals = {"data", "control", "test_function", "game", "train", "entity"}
 }
 -------------------------------------------------------------------------------
 --[[Prototypes]]--
@@ -112,7 +109,7 @@ std_stdlib_control = {
 -- Allow mutating table and string,
 -- Disallow factorio/stdlib as these are non specific additional helpers
 std_stdlib_table_string = {
-    std = "lua52c+stdlib_overrides",
+    std = "lua52c+factorio+stdlib_overrides",
     max_line_length = stdlib_ignore_list and 400 or LINE_LENGTH,
     ignore = stdlib_ignore_list and {"14.", "432"} or nil,
 }
@@ -145,11 +142,6 @@ files["**/stdlib/data/"] = std_stdlib_data
 files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
 
 -------------------------------------------------------------------------------
---[[STDS]]--
--------------------------------------------------------------------------------
--- All globals listed below
-
--------------------------------------------------------------------------------
 --[[STDS.FACTORIO]]--
 -------------------------------------------------------------------------------
 --Used in both data and control stages
@@ -160,6 +152,8 @@ stds.factorio = {
         "log",
         -- @serpent@: Lua serializer and pretty printer. (https://github.com/pkulchenko/serpent)
         "serpent",
+        -- @table_size@: Returns the number of elements inside an LUA table
+        "table_size",
     },
 }
 
@@ -444,6 +438,7 @@ stds.stdlib = {
                 "remove_keys",
                 "invert",
                 "count_keys",
+                "size",
             },
         },
         string = {
@@ -519,8 +514,7 @@ stds.stdlib_overrides = {
 -------------------------------------------------------------------------------
 --[[STDS.DEFINES]]--
 -------------------------------------------------------------------------------
--- Due to the size, these are at the bottom so I don't have to scroll through the
--- whole file to change something else
+-- Due to the size, these are at the bottom so I don't have to scroll through the whole file to change something else
 stds.factorio_defines = {
     read_globals = {
         -- @defines@:
@@ -532,8 +526,10 @@ stds.factorio_defines = {
                         "on_built_entity", --Called when player builds something.
                         "on_canceled_deconstruction", --Called when the deconstruction of an entity is canceled.
                         "on_chunk_generated", --Called when a chunk is generated.
+                        "on_console_chat", --Called when someone talks in-game either a player or through the server interface.
+                        "on_console_command", --Called when someone enters a command-like message regardless of it being a valid command.
                         "on_difficulty_settings_changed", --Called when the map difficulty settings are changed.
-                        "on_entity_died", --Called when an entity dies.
+                        "on_entity_died", -- Called when an entity dies.
                         "on_entity_renamed", --Called after an entity has been renamed either by the player or through script.
                         "on_entity_settings_pasted", --Called after entity copy-paste is done.
                         "on_force_created", --Called when a new force is created using game.create_force()
@@ -552,9 +548,11 @@ stds.factorio_defines = {
                         "on_player_built_tile", --Called after a player builds tiles.
                         "on_player_changed_force", --Called after a player changes forces.
                         "on_player_changed_surface", --Called after a player changes surfaces.
+                        "on_player_configured_blueprint", --Called when a player clicks the "confirm" button in the configure Blueprint GUI.
                         "on_player_crafted_item", --Called when the player crafts an item (upon inserting into player's inventory, not clicking the button to craft).
                         "on_player_created", --Called after the player was created.
                         "on_player_cursor_stack_changed", --Called after a players cursorstack changed in some way.
+                        "on_player_deconstructed_area", --Called when a player selects an area with a deconstruction planner.
                         "on_player_died", --Called after a player dies.
                         "on_player_driving_changed_state", --Called when the player's driving state has changed, this means a player has either entered or left a vehicle.
                         "on_player_dropped_item", --Called when a player drops an item on the ground.
@@ -569,8 +567,9 @@ stds.factorio_defines = {
                         "on_player_quickbar_inventory_changed", --Called after a players quickbar inventory changed in some way.
                         "on_player_removed_equipment", --Called after the player removes equipment from an equipment grid
                         "on_player_respawned", --Called after a player respawns.
-                        "on_player_rotated_entity", --Called when the player rotates an entity (including some non-obvious rotations such as with the stone furnace, but not the solar-panel).
+                        "on_player_rotated_entity", --Called when the player rotates an entity.
                         "on_player_selected_area", --Called after a player selects an area with a selection-tool item.
+                        "on_player_setup_blueprint", --Called when a player selects an area with a blueprint.
                         "on_player_tool_inventory_changed", --Called after a players tool inventory changed in some way.
                         "on_pre_entity_settings_pasted", --Called before entity copy-paste is done.
                         "on_pre_player_died", --Called before a players dies.
@@ -595,7 +594,8 @@ stds.factorio_defines = {
                         "on_tick", --It is fired once every tick.
                         "on_train_changed_state", --Called when a train changes state (started to stopped and vice versa)
                         "on_train_created", --Called when a new train is created either through disconnecting/connecting an existing one or building a new one.
-                        "on_trigger_created_entity",
+                        "on_trigger_created_entity", --Called when an entity with a trigger prototype (such as capsules) create an entity AND that trigger prototype defined trigger_created_entity="true".
+                        "on_player_removed", --Called when a player is deleted using remove_offline_players
                     },
                 },
                 alert_type = {
