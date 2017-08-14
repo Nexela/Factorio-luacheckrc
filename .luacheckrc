@@ -120,20 +120,26 @@ std_stdlib_data = {
     ignore = stdlib_ignore_list or nil,
 }
 
-files["**/stdlib/table.lua"] = std_stdlib_table_string
-files["**/stdlib/string.lua"] = std_stdlib_table_string
-
-files["**/stdlib/core.lua"] = std_stdlib_control
-files["**/stdlib/game.lua"] = std_stdlib_control
+-- These files are deprecated
 files["**/stdlib/surface.lua"] = std_stdlib_control
+files["**/stdlib/core.lua"] = std_stdlib_control
 files["**/stdlib/time.lua"] = std_stdlib_control
+files["**/stdlib/gui/"] = std_stdlib_control
+-- End deprecation list
+
+files["**/stdlib/game.lua"] = std_stdlib_control
 
 files["**/stdlib/utils/"] = std_stdlib_control
+
+-- These files don't need to be specified on player-force branch
+files["**/stdlib/utils/string.lua"] = std_stdlib_table_string
+files["**/stdlib/utils/table.lua"] = std_stdlib_table_string
+-- End not specified
+
 files["**/stdlib/area/"] = std_stdlib_control
 files["**/stdlib/config/"] = std_stdlib_control
 files["**/stdlib/entity/"] = std_stdlib_control
 files["**/stdlib/event/"] = std_stdlib_control
-files["**/stdlib/gui/"] = std_stdlib_control
 files["**/stdlib/log/"] = std_stdlib_control
 files["**/stdlib/trains/"] = std_stdlib_control
 
@@ -414,6 +420,19 @@ stds.factorio_data = {
 -------------------------------------------------------------------------------
 --[[STDS.STDLIB]]--
 -------------------------------------------------------------------------------
+stds.stdlib_overrides = {
+    read_globals = {
+        table = {
+            other_fields = true,
+            read_only = false
+        },
+        string = {
+            other_fields = true,
+            read_only = false
+        }
+    }
+}
+
 stds.stdlib = {
     read_globals = {
         -- Don't warn on mutated globals.
@@ -496,19 +515,6 @@ stds.stdlib_control = {
 }
 
 stds.stdlib_data = {
-}
-
-stds.stdlib_overrides = {
-    read_globals = {
-        table = {
-            other_fields = true,
-            read_only = false
-        },
-        string = {
-            other_fields = true,
-            read_only = false
-        }
-    }
 }
 
 -------------------------------------------------------------------------------
