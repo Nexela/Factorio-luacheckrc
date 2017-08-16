@@ -195,7 +195,8 @@ stds.factorio_control = {
                 "on_load",
                 "generate_event_name",
                 "raise_event",
-                "get_event_handler"
+                "get_event_handler",
+                "mod_name",
             },
         },
 
