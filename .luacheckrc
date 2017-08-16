@@ -459,6 +459,7 @@ stds.stdlib = {
                 "invert",
                 "count_keys",
                 "size",
+                "arr_to_bool",
             },
         },
         string = {
