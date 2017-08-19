@@ -28,21 +28,14 @@
 --]]
 
 -------------------------------------------------------------------------------
---[[.luacheckrc]]-- Current Factorio Version .15.3
+--[[.luacheckrc]]-- Current Factorio Version .15.33
 -------------------------------------------------------------------------------
 --Ignore some warnings in .luacheckrc
 files['.luacheckrc'] = {
     std = "lua52c",
-    global = false, --Turn of global warnings for this file
+    globals = {"files", "exclude_files", "not_globals", "stds", "std", "max_line_length"},
     max_line_length = false, --turn of line length warnings for this file
-    --ignore = {"stdlib_ignore_list"},
 }
-
---List of files and directories to exclude
-exclude_files = {"**/.mods.*/", "**/.SOURCE/factorio**", "**/.build/", "**/build/", "**/.legacy/", "**/.script-output/*"}
-
---These globals are not available to the factorio API
-not_globals = {"coroutine", "io", "socket"}
 
 -- require("") can be used to require additional luacheck files
 -- however LUA_PATH enviroment variable must be
@@ -60,13 +53,26 @@ not_globals = {"coroutine", "io", "socket"}
 -- stdlib_control -- stdlib globals used in control stage only
 -- stdlib_data -- stdlib globals used in the data stage only
 
--- Line length to use
+--List of files and directories to exclude
+exclude_files = {
+    "**/.mods.*/", --Ignore from symlinked
+    "**/mod/stdlib/", --Ignore from symlinked
+    "**/.build/", --Ignore build directorys
+    "**/build/",
+    "**/.legacy/", --Ignore legacy stuff
+    "**/.script-output/*", --Ignore script output
+    "**/deprecated/"
+}
+
+--These globals are not available to the factorio API
+not_globals = {"coroutine", "io", "socket"}
+
 local LINE_LENGTH = 200
--- Uncomment to ignore stdlib errors
---stdlib_ignore_list = {"0..", "1..", "2..", "3..", "4..", "5..", "6..", "7..", "8..", "9..", "fail_if_missing"}
+local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
+local STD_PROTOTYPES = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
 
 --Set default linting rules to check control stage
-std = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
+std = STD_CONTROL
 max_line_length = LINE_LENGTH
 
 -------------------------------------------------------------------------------
@@ -74,7 +80,6 @@ max_line_length = LINE_LENGTH
 -------------------------------------------------------------------------------
 files['**/spec/**'] = {
     std = "lua52c+busted+stdlib_busted+factorio_defines+factorio_control+stdlib_control+stdlib",
-    --ignore = {"0..", "1..", "2..", "3..", "4..", "5..", "6..", "7..", "8..", "9..", "fail_if_missing"}
 }
 
 stds.stdlib_busted = {
@@ -82,42 +87,39 @@ stds.stdlib_busted = {
         "Event", "Gui", "Config", "Logger", "Core",
     },
 }
+
 -------------------------------------------------------------------------------
 --[[Prototypes]]--
 -------------------------------------------------------------------------------
 --Set prototype files
-prototypes = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
-files['**/data.lua'].std = prototypes
-files['**/data-updates.lua'].std = prototypes
-files['**/data-final-fixes.lua'].std = prototypes
-files['**/settings.lua'].std = prototypes
-files['**/settings-updates.lua'].std = prototypes
-files['**/settings-final-fixes.lua'].std = prototypes
-files['**/prototypes/'].std = prototypes
-files['**/settings/'].std = prototypes
+files['**/data.lua'].std = STD_PROTOTYPES
+files['**/data-updates.lua'].std = STD_PROTOTYPES
+files['**/data-final-fixes.lua'].std = STD_PROTOTYPES
+files['**/settings.lua'].std = STD_PROTOTYPES
+files['**/settings-updates.lua'].std = STD_PROTOTYPES
+files['**/settings-final-fixes.lua'].std = STD_PROTOTYPES
+files['**/prototypes/'].std = STD_PROTOTYPES
+files['**/settings/'].std = STD_PROTOTYPES
 
 -------------------------------------------------------------------------------
 --[[Set STDLIB modules]]--
 -------------------------------------------------------------------------------
 -- Defaults to use for stdlib
-std_stdlib_control = {
+local std_stdlib_control = {
     std = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines",
-    max_line_length = stdlib_ignore_list and 400 or LINE_LENGTH,
-    ignore = stdlib_ignore_list or nil,
+    max_line_length = LINE_LENGTH,
 }
 
 -- Allow mutating table and string,
--- Disallow factorio/stdlib as these are non specific additional helpers
-std_stdlib_table_string = {
+-- Disallow factorio_stdlib as these are non specific additional helpers
+local std_stdlib_table_string = {
     std = "lua52c+factorio+stdlib_overrides",
-    max_line_length = stdlib_ignore_list and 400 or LINE_LENGTH,
-    ignore = stdlib_ignore_list and {"14.", "432"} or nil,
+    max_line_length = LINE_LENGTH,
 }
 
-std_stdlib_data = {
+local std_stdlib_data = {
     std = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines",
-    max_line_length = stdlib_ignore_list and 400 or LINE_LENGTH,
-    ignore = stdlib_ignore_list or nil,
+    max_line_length = LINE_LENGTH,
 }
 
 -- These files are deprecated
@@ -143,14 +145,17 @@ files["**/stdlib/event/"] = std_stdlib_control
 files["**/stdlib/log/"] = std_stdlib_control
 files["**/stdlib/trains/"] = std_stdlib_control
 
-files["**/stdlib/prototype/"] = std_stdlib_data
+-- STDLIB data files
 files["**/stdlib/data/"] = std_stdlib_data
+--Deprecated?
+files["**/stdlib/prototype/"] = std_stdlib_data
 files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
+-- End STDLIB data
 
 -------------------------------------------------------------------------------
 --[[STDS.FACTORIO]]--
 -------------------------------------------------------------------------------
---Used in both data and control stages
+-- Used in both data and control stages
 stds.factorio = {
     --Set the read only variables
     read_globals = {
@@ -163,6 +168,7 @@ stds.factorio = {
     },
 }
 
+-- Used in control stage
 stds.factorio_control = {
     read_globals = {
 
@@ -215,8 +221,8 @@ stds.factorio_control = {
         -- It is, however, not available inside handlers registered with @script.on_load@.
         -- (http://lua-api.factorio.com/latest/LuaGameScript.html)
         game ={
-            --other_fields = true,
-            --read_only = false,
+            other_fields = true,
+            read_only = false,
             fields = {
                 "set_game_state",
                 "get_entity_by_tag",
@@ -478,7 +484,6 @@ stds.stdlib = {
 
 stds.stdlib_control = {
     -- STDLIB globals
-    -- These need to be reworked in stdlib to not be globals.
     globals = {
         Event = {
             other_fields = true,
@@ -530,6 +535,9 @@ stds.factorio_defines = {
             fields = {
                 events = {
                     fields = {
+                        "script_raised_destroy",
+                        "script_raised_built",
+                        "script_raised_revive",
                         "on_biter_base_built", --Called when a biter migration builds a base.
                         "on_built_entity", --Called when player builds something.
                         "on_canceled_deconstruction", --Called when the deconstruction of an entity is canceled.
