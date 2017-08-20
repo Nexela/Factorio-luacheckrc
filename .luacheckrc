@@ -136,6 +136,8 @@ files["**/stdlib/utils/"] = std_stdlib_control
 -- These files don't need to be specified on player-force branch
 files["**/stdlib/utils/string.lua"] = std_stdlib_table_string
 files["**/stdlib/utils/table.lua"] = std_stdlib_table_string
+files["**/stdlib/string.lua"] = std_stdlib_table_string
+files["**/stdlib/table.lua"] = std_stdlib_table_string
 -- End not specified
 
 files["**/stdlib/area/"] = std_stdlib_control
