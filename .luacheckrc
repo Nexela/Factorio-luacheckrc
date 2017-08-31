@@ -112,10 +112,10 @@ local std_stdlib_control = {
 
 -- Allow mutating table and string,
 -- Disallow factorio_stdlib as these are non specific additional helpers
-local std_stdlib_table_string = {
-    std = "lua52c+factorio+stdlib_overrides",
-    max_line_length = LINE_LENGTH,
-}
+-- local std_stdlib_table_string = {
+--     std = "lua52c+factorio+stdlib_overrides",
+--     max_line_length = LINE_LENGTH,
+-- }
 
 local std_stdlib_data = {
     std = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines",
@@ -123,21 +123,22 @@ local std_stdlib_data = {
 }
 
 -- These files are deprecated
-files["**/stdlib/surface.lua"] = std_stdlib_control
-files["**/stdlib/core.lua"] = std_stdlib_control
-files["**/stdlib/time.lua"] = std_stdlib_control
-files["**/stdlib/gui/"] = std_stdlib_control
+-- files["**/stdlib/surface.lua"] = std_stdlib_control
+-- files["**/stdlib/time.lua"] = std_stdlib_control
+-- files["**/stdlib/gui/"] = std_stdlib_control
 -- End deprecation list
 
+files["**/stdlib/core.lua"] = std_stdlib_control
 files["**/stdlib/game.lua"] = std_stdlib_control
 
 files["**/stdlib/utils/"] = std_stdlib_control
+files["**/stdlib/utils/string.lua"].std = "lua52c"
+files["**/stdlib/utils/table.lua"].std = "lua52c"
+files["**/stdlib/utils/iterator.lua"].std = "lua52c"
 
--- These files don't need to be specified on player-force branch
-files["**/stdlib/utils/string.lua"] = std_stdlib_table_string
-files["**/stdlib/utils/table.lua"] = std_stdlib_table_string
-files["**/stdlib/string.lua"] = std_stdlib_table_string
-files["**/stdlib/table.lua"] = std_stdlib_table_string
+-- Deprecated
+-- files["**/stdlib/string.lua"] = std_stdlib_table_string
+-- files["**/stdlib/table.lua"] = std_stdlib_table_string
 -- End not specified
 
 files["**/stdlib/area/"] = std_stdlib_control
@@ -149,9 +150,10 @@ files["**/stdlib/trains/"] = std_stdlib_control
 
 -- STDLIB data files
 files["**/stdlib/data/"] = std_stdlib_data
---Deprecated?
-files["**/stdlib/prototype/"] = std_stdlib_data
-files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
+
+--Deprecated
+-- files["**/stdlib/prototype/"] = std_stdlib_data
+-- files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
 -- End STDLIB data
 
 -------------------------------------------------------------------------------
@@ -340,6 +342,11 @@ stds.factorio_control = {
                     read_only = true,
                     other_fields = true
                 },
+                decorative_prototypes = {
+                    --string dictionary -> LuaDecorativePrototype
+                    read_only = true,
+                    other_fields = true
+                },
                 map_settings = {
                     --custom -> mapsettings
                     read_only = false,
@@ -347,6 +354,10 @@ stds.factorio_control = {
                 },
                 active_mods = {
                     --string dictionary -> string version
+                    read_only = true,
+                    other_fields = true
+                },
+                permissions = {
                     read_only = true,
                     other_fields = true
                 }
@@ -429,18 +440,19 @@ stds.factorio_data = {
 -------------------------------------------------------------------------------
 --[[STDS.STDLIB]]--
 -------------------------------------------------------------------------------
-stds.stdlib_overrides = {
-    read_globals = {
-        table = {
-            other_fields = true,
-            read_only = false
-        },
-        string = {
-            other_fields = true,
-            read_only = false
-        }
-    }
-}
+--Deprecated, Should be controlled in file
+-- stds.stdlib_overrides = {
+--     read_globals = {
+--         table = {
+--             other_fields = true,
+--             read_only = false
+--         },
+--         string = {
+--             other_fields = true,
+--             read_only = false
+--         }
+--     }
+-- }
 
 stds.stdlib = {
     read_globals = {
@@ -481,6 +493,10 @@ stds.stdlib = {
                 "pretty_number",
             },
         },
+        iter = {
+            read_only = true,
+            other_fields = true,
+        }
     }
 }
 
@@ -614,6 +630,8 @@ stds.factorio_defines = {
                         "on_train_created", --Called when a new train is created either through disconnecting/connecting an existing one or building a new one.
                         "on_trigger_created_entity", --Called when an entity with a trigger prototype (such as capsules) create an entity AND that trigger prototype defined trigger_created_entity="true".
                         "on_player_removed", --Called when a player is deleted using remove_offline_players
+                        "on_player_promoted",
+                        "on_player_demoted",
                     },
                 },
                 alert_type = {
@@ -1086,6 +1104,7 @@ stds.factorio_defines = {
                         "passive_provider",
                         "requester",
                         "storage",
+                        "buffer"
                     },
                 },
                 mouse_button_type = {
