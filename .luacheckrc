@@ -84,7 +84,7 @@ files['**/spec/**'] = {
 
 stds.stdlib_busted = {
     globals = {
-        "Event", "Gui", "Config", "Logger", "Core",
+        "Event", "Gui", "Config", "Logger", "Core", "serpent", "log", "SLOG", "RESET"
     },
 }
 
@@ -110,23 +110,10 @@ local std_stdlib_control = {
     max_line_length = LINE_LENGTH,
 }
 
--- Allow mutating table and string,
--- Disallow factorio_stdlib as these are non specific additional helpers
--- local std_stdlib_table_string = {
---     std = "lua52c+factorio+stdlib_overrides",
---     max_line_length = LINE_LENGTH,
--- }
-
 local std_stdlib_data = {
     std = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines",
     max_line_length = LINE_LENGTH,
 }
-
--- These files are deprecated
--- files["**/stdlib/surface.lua"] = std_stdlib_control
--- files["**/stdlib/time.lua"] = std_stdlib_control
--- files["**/stdlib/gui/"] = std_stdlib_control
--- End deprecation list
 
 files["**/stdlib/core.lua"] = std_stdlib_control
 files["**/stdlib/game.lua"] = std_stdlib_control
@@ -135,11 +122,6 @@ files["**/stdlib/utils/"] = std_stdlib_control
 files["**/stdlib/utils/string.lua"].std = "lua52c"
 files["**/stdlib/utils/table.lua"].std = "lua52c"
 files["**/stdlib/utils/iterator.lua"].std = "lua52c"
-
--- Deprecated
--- files["**/stdlib/string.lua"] = std_stdlib_table_string
--- files["**/stdlib/table.lua"] = std_stdlib_table_string
--- End not specified
 
 files["**/stdlib/area/"] = std_stdlib_control
 files["**/stdlib/config/"] = std_stdlib_control
@@ -150,11 +132,6 @@ files["**/stdlib/trains/"] = std_stdlib_control
 
 -- STDLIB data files
 files["**/stdlib/data/"] = std_stdlib_data
-
---Deprecated
--- files["**/stdlib/prototype/"] = std_stdlib_data
--- files["**/stdlib/debug/prototypes.lua"] = std_stdlib_data
--- End STDLIB data
 
 -------------------------------------------------------------------------------
 --[[STDS.FACTORIO]]--
@@ -632,6 +609,10 @@ stds.factorio_defines = {
                         "on_player_removed", --Called when a player is deleted using remove_offline_players
                         "on_player_promoted",
                         "on_player_demoted",
+                        "on_mod_gui_closed",
+                        "on_combat_robot_expired",
+                        "on_player_changed_position",
+                        "on_mod_gui_closed",
                     },
                 },
                 alert_type = {
@@ -899,6 +880,7 @@ stds.factorio_defines = {
                         "research",
                         "trains",
                         "tutorials",
+                        "custom"
                     },
                 },
                 input_action = {
