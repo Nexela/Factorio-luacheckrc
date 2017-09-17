@@ -1,22 +1,23 @@
 -------------------------------------------------------------------------------
 --[[LICENSE]]--
 -------------------------------------------------------------------------------
--- This is free and unencumbered software released into the public domain.
+-- .luacheckrc
+-- This file is free and unencumbered software released into the public domain.
 --
 -- Anyone is free to copy, modify, publish, use, compile, sell, or
--- distribute this software, either in source code form or as a compiled
+-- distribute this file, either in source code form or as a compiled
 -- binary, for any purpose, commercial or non-commercial, and by any
 -- means.
 --
 -- In jurisdictions that recognize copyright laws, the author or authors
--- of this software dedicate any and all copyright interest in the
+-- of this file dedicate any and all copyright interest in the
 -- software to the public domain. We make this dedication for the benefit
 -- of the public at large and to the detriment of our heirs and
 -- successors. We intend this dedication to be an overt act of
 -- relinquishment in perpetuity of all present and future rights to this
 -- software under copyright law.
 --
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+-- THE FILE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 -- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 -- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 -- IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
@@ -28,18 +29,14 @@
 --]]
 
 -------------------------------------------------------------------------------
---[[.luacheckrc]]-- Current Factorio Version .15.33
+--[[.luacheckrc]]-- Current Factorio Version .16
 -------------------------------------------------------------------------------
---Ignore some warnings in .luacheckrc
+-- Set up the the standards for this file.
 files['.luacheckrc'] = {
     std = "lua52c",
     globals = {"files", "exclude_files", "not_globals", "stds", "std", "max_line_length"},
     max_line_length = false, --turn of line length warnings for this file
 }
-
--- require("") can be used to require additional luacheck files
--- however LUA_PATH enviroment variable must be
--- declared and required file must reside in path
 
 -------------------------------------------------------------------------------
 --[[Set Defaults]]--
@@ -49,94 +46,139 @@ files['.luacheckrc'] = {
 -- factorio_control -- Factorio globals used in the control stage only
 -- factorio_data -- Factorio globals used in the data stage only
 -- factorio_defines -- Factorio global defines used in both stages.
+-- factorio_lualib -- Factorio globals in core/lualib
 -- stdlib -- stdlib globals used in data and control stages
 -- stdlib_control -- stdlib globals used in control stage only
 -- stdlib_data -- stdlib globals used in the data stage only
+-- stdlib_spec -- globals used for busted spec testing
 
---List of files and directories to exclude
-exclude_files = {
-    "**/.mods.*/", --Ignore from symlinked
-    "**/mod/stdlib/", --Ignore from symlinked
-    "**/.build/", --Ignore build directorys
-    "**/build/",
-    "**/.legacy/", --Ignore legacy stuff
-    "**/.script-output/*", --Ignore script output
-    "**/deprecated/"
-}
+local LINE_LENGTH = false -- It is 2017 limits on length are a waste
+local IGNORE = {"211/%w+_$"} -- ignore unused variables that end with _
+local NOT GLOBALS = {"coroutine", "io", "socket"} -- These globals are not available to the factorio API
 
---These globals are not available to the factorio API
-not_globals = {"coroutine", "io", "socket"}
-
-local LINE_LENGTH = 200
 local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
-local STD_PROTOTYPES = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
+local STD_DATA = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
 
---Set default linting rules to check control stage
+-- In a perfect world these would be STD_DATA and STD_CONTROL (mostly)
+local STD_BASE_DATA = "lua52c+factorio+factorio_data+factorio_defines+data_globals"
+local STD_BASE_CONTROL = "lua52c+factorio+factorio_control+factorio_defines"
+local STD_BASE_LUALIB = "lua52c+factorio+factorio_control+factorio_defines+factorio_lualib"
+
+-------------------------------------------------------------------------------
+--[[Assume Factorio Control stage as default]]--
+-------------------------------------------------------------------------------
 std = STD_CONTROL
 max_line_length = LINE_LENGTH
 
--------------------------------------------------------------------------------
---[[Factorio STDLIB Busted]]--
--------------------------------------------------------------------------------
-files['**/spec/**'] = {
-    std = "lua52c+busted+stdlib_busted+factorio_defines+factorio_control+stdlib_control+stdlib",
+not_globals = NOT_GLOBALS
+ignore = IGNORE
+
+--List of files and directories to exclude
+exclude_files = {
+    "**/.*", --Ignore if path starts with .
+    "**/mod/stdlib/", --Ignore from symlinked
+    "**/build/",
+    "**/deprecated/",
+
+    "**/combat-tester/",
+    "**/test-maker/",
+    "**/trailer/",
 }
 
-stds.stdlib_busted = {
-    globals = {
-        "Event", "Gui", "Config", "Logger", "Core", "serpent", "log", "SLOG", "RESET"
-    },
+-------------------------------------------------------------------------------
+--[[Mod Prototypes]]--
+-------------------------------------------------------------------------------
+--Set default prototype files
+files['**/data.lua'].std = STD_DATA
+files['**/data-updates.lua'].std = STD_DATA
+files['**/data-final-fixes.lua'].std = STD_DATA
+files['**/settings.lua'].std = STD_DATA
+files['**/settings-updates.lua'].std = STD_DATA
+files['**/settings-final-fixes.lua'].std = STD_DATA
+files['**/prototypes/'].std = STD_DATA
+files['**/settings/'].std = STD_DATA
+
+-------------------------------------------------------------------------------
+--[[Base]]--
+-------------------------------------------------------------------------------
+local base_ignore = {
+    IGNORE[1],
+    "111", --setting non standard global variable
+    "112/level", --mutating non standard globalal
+    "113", --accessing undefined variable
+
+    "211", --unused variable (33)
+    "212", --unused argument (65)
+
+    "213/^[ijk]$", --unused loop variable
+    "213/index",
+    "213/key",
+    "213/team",
+    "213/modifier",
+    "213/force",
+    "213/recipe_name",
+    "213/upgrade",
+    "213/item",
+
+    "4..", --shadowing/previously defined
 }
 
--------------------------------------------------------------------------------
---[[Prototypes]]--
--------------------------------------------------------------------------------
---Set prototype files
-files['**/data.lua'].std = STD_PROTOTYPES
-files['**/data-updates.lua'].std = STD_PROTOTYPES
-files['**/data-final-fixes.lua'].std = STD_PROTOTYPES
-files['**/settings.lua'].std = STD_PROTOTYPES
-files['**/settings-updates.lua'].std = STD_PROTOTYPES
-files['**/settings-final-fixes.lua'].std = STD_PROTOTYPES
-files['**/prototypes/'].std = STD_PROTOTYPES
-files['**/settings/'].std = STD_PROTOTYPES
+local base_control = {
+    std = STD_BASE_CONTROL,
+    ignore = base_ignore
+}
+files["**/base/scenarios/"] = base_control
+files["**/base/tutorials/"] = base_control
+files["**/base/campaigns/"] = base_control
+
+files['**/base/migrations'] = {
+    std = STD_BASE_CONTROL,
+    ignore = {IGNORE[1], "213"}
+}
+
+files['**/base/prototypes'].std = STD_BASE_DATA
+files['**/core/prototypes'].std = STD_BASE_DATA
+
+files['**/core/lualib/'].std = STD_BASE_LUALIB
+files['**/core/lualib/util.lua'].ignore = {IGNORE[1], "432/object"}
+files['**/core/lualib/silo-script.lua'].ignore = {IGNORE[1], "4../player", "213/k"}
+files['**/core/lualib/story.lua'].ignore = base_ignore
+files['**/core/lualib/builder.lua'].ignore = {"..."}
 
 -------------------------------------------------------------------------------
---[[Set STDLIB modules]]--
+--[[Set STDLIB project modules]]--
 -------------------------------------------------------------------------------
 -- Defaults to use for stdlib
-local std_stdlib_control = {
+local stdlib_control = {
     std = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines",
     max_line_length = LINE_LENGTH,
 }
 
-local std_stdlib_data = {
+local stdlib_data = {
     std = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines",
     max_line_length = LINE_LENGTH,
 }
 
-files["**/stdlib/core.lua"] = std_stdlib_control
-files["**/stdlib/game.lua"] = std_stdlib_control
+-- Assume control stage for stdlib
+files["**/stdlib/"] = stdlib_control
 
-files["**/stdlib/utils/"] = std_stdlib_control
+-- STDLIB global mutates
+files["**/stdlib/utils/math.lua"].std = "lua52c"
 files["**/stdlib/utils/string.lua"].std = "lua52c"
 files["**/stdlib/utils/table.lua"].std = "lua52c"
 files["**/stdlib/utils/iterator.lua"].std = "lua52c"
 
-files["**/stdlib/area/"] = std_stdlib_control
-files["**/stdlib/config/"] = std_stdlib_control
-files["**/stdlib/entity/"] = std_stdlib_control
-files["**/stdlib/event/"] = std_stdlib_control
-files["**/stdlib/log/"] = std_stdlib_control
-files["**/stdlib/trains/"] = std_stdlib_control
-
 -- STDLIB data files
-files["**/stdlib/data/"] = std_stdlib_data
+files["**/stdlib/data/"] = stdlib_data
+
+-- STDLIB Busted Spec
+files['**/spec/**'] = {
+    std = "lua52c+busted+stdlib_busted+factorio_defines+factorio_control+stdlib_control+stdlib",
+}
 
 -------------------------------------------------------------------------------
---[[STDS.FACTORIO]]--
+--[[STDS FACTORIO]]--
 -------------------------------------------------------------------------------
--- Used in both data and control stages
 stds.factorio = {
     --Set the read only variables
     read_globals = {
@@ -146,10 +188,37 @@ stds.factorio = {
         "serpent",
         -- @table_size@: Returns the number of elements inside an LUA table
         "table_size",
+        util = {
+            fields = {
+                "by_pixel",
+                "distance",
+                "findfirstentity",
+                "positiontostr",
+                "formattime",
+                "moveposition",
+                "oppositedirection",
+                "ismoduleavailable",
+                "multiplystripes",
+                "format_number",
+                "increment",
+                "color",
+                table = {
+                    fields = {
+                        "compare",
+                        "deepcopy"
+                    },
+                },
+            },
+        },
+        table = {
+            fields = {
+                "compare",
+                "deepcopy"
+            },
+        },
     },
 }
 
--- Used in control stage
 stds.factorio_control = {
     read_globals = {
 
@@ -365,7 +434,8 @@ stds.factorio_data = {
                     other_fields = true,
                     read_only = false
                 },
-                "extend"
+                "extend",
+                "is_demo"
             },
         },
 
@@ -374,28 +444,6 @@ stds.factorio_data = {
                 "startup",
                 "global",
                 "player",
-            },
-        },
-
-        util = {
-            fields = {
-                "by_pixel",
-                "distance",
-                "findfirstentity",
-                "positiontostr",
-                "formattime",
-                "moveposition",
-                "oppositedirection",
-                "ismoduleavailable",
-                "multiplystripes",
-                "format_number",
-                "increment",
-                table = {
-                    fields = {
-                        "compare",
-                        "deepcopy"
-                    },
-                },
             },
         },
 
@@ -414,22 +462,165 @@ stds.factorio_data = {
     }
 }
 
--------------------------------------------------------------------------------
---[[STDS.STDLIB]]--
--------------------------------------------------------------------------------
---Deprecated, Should be controlled in file
--- stds.stdlib_overrides = {
---     read_globals = {
---         table = {
---             other_fields = true,
---             read_only = false
---         },
---         string = {
---             other_fields = true,
---             read_only = false
---         }
---     }
--- }
+stds.factorio_lualib = {
+    globals = {
+        "mod_gui",
+        "silo_script",
+        "util",
+        "table",
+        "data",
+        "camera",
+        "story_branches",
+        "story_points_by_name"
+    }
+}
+
+stds.data_globals = {
+    globals = {
+        "default_container_padding",
+        "default_orange_color",
+        "default_light_orange_color",
+        "warning_red_color",
+        "achievement_green_color",
+        "achievement_tan_color",
+        "make_cursor_box",
+        "make_full_cursor_box",
+        "orangebuttongraphcialset",
+        "bluebuttongraphcialset",
+        "rail_pictures_internal",
+        "pipecoverspictures",
+        "ending_patch_prototype",
+        "basic_belt_horizontal",
+        "basic_belt_vertical",
+        "basic_belt_ending_top",
+        "basic_belt_ending_bottom",
+        "basic_belt_ending_side",
+        "basic_belt_starting_top",
+        "basic_belt_starting_bottom",
+        "basic_belt_starting_side",
+        "get_circuit_connector_sprites",
+        "get_circuit_connector_wire_shifting_for_connector",
+        "inserter_circuit_connector_sprites",
+        "inserter_circuit_wire_connection_point",
+        "inserter_circuit_wire_max_distance",
+        "inserter_default_stack_control_input_signal",
+        "transport_belt_connector_frame_sprites",
+        "transport_belt_circuit_wire_connection_point",
+        "transport_belt_circuit_wire_max_distance",
+        "transport_belt_circuit_connector_sprites",
+        "playeranimations",
+        "make_unit_melee_ammo_type",
+        "conditional_return", --CHECK
+        "pipepictures",
+        "smoke",
+        "assembler2pipepictures",
+        "assembler3pipepictures",
+        "bloodtint",
+        "shadowtint",
+        "bloodparticlescale",
+        "worm_folded_animation",
+        "worm_preparing_animation",
+        "worm_prepared_animation",
+        "worm_attack_animation",
+        "worm_die_animation",
+        "make_biter_roars",
+        "make_biter_dying_sounds",
+        "make_biter_calls",
+        "make_spitter_roars",
+        "make_spitter_dying_sounds",
+        "make_worm_roars",
+        "make_worm_dying_sounds",
+        "make_heavy_gunshot_sounds",
+        "make_light_gunshot_sounds",
+        "enemy_autoplace",
+        "enemy_spawner_autoplace",
+        "enemy_worm_autoplace",
+        "gun_turret_extension",
+        "gun_turret_extension_mask",
+        "gun_turret_extension_shadow",
+        "gun_turret_attack",
+        "shift_small_worm",
+        "small_worm_scale",
+        "small_worm_tint",
+        "spawner_idle_animation",
+        "spawner_die_animation",
+        "biterrunanimation",
+        "biterattackanimation",
+        "biterdieanimation",
+        "smallbiterscale", --CHECK
+        "small_biter_tint1",--CHECK
+        "small_biter_tint2",
+        "biter_spawner_tint",
+        "destroyed_rail_pictures",
+        "dashkey", --CHECK
+        "dashkey2", --CHECK
+        "tile_variations_template",
+        "water_autoplace_settings",
+        "fast_belt_horizontal",
+        "fast_belt_vertical",
+        "fast_belt_ending_top",
+        "fast_belt_ending_bottom",
+        "fast_belt_ending_side",
+        "fast_belt_starting_top",
+        "fast_belt_starting_bottom",
+        "fast_belt_starting_side",
+        "express_belt_horizontal",
+        "express_belt_vertical",
+        "express_belt_ending_top",
+        "express_belt_ending_bottom",
+        "express_belt_ending_side",
+        "express_belt_starting_top",
+        "express_belt_starting_bottom",
+        "express_belt_starting_side",
+        "make_laser_sounds",
+        "generate_arithmetic_combinator",
+        "generate_decider_combinator",
+        "generate_constant_combinator",
+        "rail_pictures",
+        "standard_train_wheels",
+        "drive_over_tie",
+        "flying_robot_sounds",
+        "crash_trigger",
+        "rolling_stock_back_light",
+        "rolling_stock_stand_by_light",
+        "make_4way_animation_from_spritesheet",
+        "make_heat_pipe_pictures",
+        "capsule_smoke",
+        "makeBeam",
+        "laser_turret_extension",
+        "laser_turret_extension_shadow",
+        "laser_turret_extension_mask",
+        "shift_medium_worm", --CHECK
+        "medium_worm_scale",--CHECK
+        "medium_worm_tint",--CHECK
+        "big_worm_scale", --CHECK
+        "big_worm_tint", --CHECK
+        "shift_big_worm", --CHECK
+        "spitterattackanimation",
+        "spitterrunanimation",--CHECK
+        "spitterdyinganimation",--CHECK
+        "spitter_spawner_tint",--CHECK
+        "spitter_attack_parameters",
+        "smallspitterscale",--CHECK
+        "smallspittertint",--CHECK
+        "mediumspitterscale",--CHECK
+        "mediumspittertint",--CHECK
+        "bigspitterscale",--CHECK
+        "bigspittertint",--CHECK
+        "behemothspitterscale",--CHECK
+        "behemothspittertint",--CHECK
+        "mediumbiterscale",--CHECK
+        "medium_biter_tint1",--CHECK
+        "medium_biter_tint2",--CHECK
+        "bigbiterscale",--CHECK
+        "big_biter_tint1", --CHECK
+        "big_biter_tint2", --CHECK
+        "behemothbiterscale",
+        "behemoth_biter_tint1",--CHECK
+        "behemoth_biter_tint2",--CHECK
+        "productivitymodulelimitation"
+    }
+}
 
 stds.stdlib = {
     read_globals = {
@@ -517,15 +708,17 @@ stds.stdlib_control = {
 }
 
 stds.stdlib_data = {
+
 }
 
--------------------------------------------------------------------------------
---[[STDS.DEFINES]]--
--------------------------------------------------------------------------------
--- Due to the size, these are at the bottom so I don't have to scroll through the whole file to change something else
+stds.stdlib_busted = {
+    globals = {
+        "Event", "Gui", "Config", "Logger", "Core", "serpent", "log", "SLOG", "RESET"
+    },
+}
+
 stds.factorio_defines = {
     read_globals = {
-        -- @defines@:
         defines = {
             fields = {
                 events = {
@@ -585,7 +778,7 @@ stds.factorio_defines = {
                         "on_pre_entity_settings_pasted", --Called before entity copy-paste is done.
                         "on_pre_player_died", --Called before a players dies.
                         "on_pre_surface_deleted", --Called just before a surface is deleted.
-                        "on_preplayer_mined_item", --Called when the player finishes mining an entity, before the entity is removed from map.
+                        "on_pre_player_mined_item", --Called when the player finishes mining an entity, before the entity is removed from map.
                         "on_put_item", --Called when players uses item to build something.
                         "on_research_finished", --Called when a research finishes.
                         "on_research_started", --Called when a technology research starts.
@@ -613,6 +806,7 @@ stds.factorio_defines = {
                         "on_combat_robot_expired",
                         "on_player_changed_position",
                         "on_mod_gui_closed",
+                        "on_preplayer_mined_item", --DEPRECATED .16
                     },
                 },
                 alert_type = {
@@ -1217,3 +1411,55 @@ stds.factorio_defines = {
         }
     }
 }
+
+-- Warnings list
+-- 011 A syntax error.
+-- 021 An invalid inline option.
+-- 022 An unpaired inline push directive.
+-- 023 An unpaired inline pop directive.
+-- 111 Setting an undefined global variable.
+-- 112 Mutating an undefined global variable.
+-- 113 Accessing an undefined global variable.
+-- 121 Setting a read-only global variable.
+-- 122 Setting a read-only field of a global variable.
+-- 131 Unused implicitly defined global variable.
+-- 142 Setting an undefined field of a global variable.
+-- 143 Accessing an undefined field of a global variable.
+-- 211 Unused local variable.
+-- 212 Unused argument.
+-- 213 Unused loop variable.
+-- 221 Local variable is accessed but never set.
+-- 231 Local variable is set but never accessed.
+-- 232 An argument is set but never accessed.
+-- 233 Loop variable is set but never accessed.
+-- 241 Local variable is mutated but never accessed.
+-- 311 Value assigned to a local variable is unused.
+-- 312 Value of an argument is unused.
+-- 313 Value of a loop variable is unused.
+-- 314 Value of a field in a table literal is unused.
+-- 321 Accessing uninitialized local variable.
+-- 331 Value assigned to a local variable is mutated but never accessed.
+-- 341 Mutating uninitialized local variable.
+-- 411 Redefining a local variable.
+-- 412 Redefining an argument.
+-- 413 Redefining a loop variable.
+-- 421 Shadowing a local variable.
+-- 422 Shadowing an argument.
+-- 423 Shadowing a loop variable.
+-- 431 Shadowing an upvalue.
+-- 432 Shadowing an upvalue argument.
+-- 433 Shadowing an upvalue loop variable.
+-- 511 Unreachable code.
+-- 512 Loop can be executed at most once.
+-- 521 Unused label.
+-- 531 Left-hand side of an assignment is too short.
+-- 532 Left-hand side of an assignment is too long.
+-- 541 An empty do end block.
+-- 542 An empty if branch.
+-- 551 An empty statement.
+-- 611 A line consists of nothing but whitespace.
+-- 612 A line contains trailing whitespace.
+-- 613 Trailing whitespace in a string.
+-- 614 Trailing whitespace in a comment.
+-- 621 Inconsistent indentation (SPACE followed by TAB).
+-- 631 Line is too long.
