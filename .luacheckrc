@@ -89,9 +89,6 @@ files['**/settings/'].std = STD_DATA
 -------------------------------------------------------------------------------
 --[[Base]]--
 -------------------------------------------------------------------------------
-files['**/base/prototypes/'].std = STD_BASE_DATA
-files['**/core/prototypes/'].std = STD_BASE_DATA
-
 local base_scenarios = {
     std = STD_BASE_CONTROL,
     ignore = {
@@ -110,22 +107,16 @@ files["**/base/campaigns/"] = base_scenarios
 files['**/base/migrations/'].std = STD_BASE_CONTROL
 
 files['**/core/lualib/'].std = STD_BASE_CONTROL
-files['**/core/lualib/util.lua'] = {
-    globals = {"util", "table"},
-    ignore = {"432/object"}
-}
-files['**/core/lualib/silo-script.lua'] = {
-    globals = {"silo_script"},
-    ignore = {"4../player"}
-}
-files['**/core/lualib/story.lua'] = {
-    std = "+factorio_base_story",
-    ignore = {"42./k", "42./filter"},
-}
+files['**/core/lualib/util.lua'] = {globals = {"util", "table"}, ignore = {"432/object"}}
+files['**/core/lualib/silo-script.lua'] = {globals = {"silo_script"}, ignore = {"4../player"}}
+files['**/core/lualib/story.lua'] = {std = "+factorio_base_story", ignore = {"42./k", "42./filter"}}
 files['**/core/lualib/mod-gui.lua'].globals = {"mod_gui"}
 files['**/core/lualib/dataloader.lua'].globals = {"data"}
 files['**/core/lualib/camera.lua'].globals = {"camera"}
 files['**/core/lualib/builder.lua'].globals = {"Builder", "builder", "action", "down", "right"}
+
+files['**/base/prototypes/'].std = STD_BASE_DATA
+files['**/core/prototypes/'].std = STD_BASE_DATA
 
 -------------------------------------------------------------------------------
 --[[Set STDLIB project modules]]--
