@@ -43,7 +43,7 @@ files['.luacheckrc'] = {
 -------------------------------------------------------------------------------
 local LINE_LENGTH = false -- It is 2017 limits on length are a waste
 local IGNORE = {"21./%w+_$", "213/[ijk]", "213/index"}
-local NOT GLOBALS = {"coroutine", "io", "socket", "dofile", "loadfile"} -- These globals are not available to the factorio API
+local NOT_GLOBALS = {"coroutine", "io", "socket", "dofile", "loadfile"} -- These globals are not available to the factorio API
 
 local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
 local STD_DATA = "lua52c+factorio+factorio_data+stdlib+factorio_defines"
@@ -89,6 +89,7 @@ files['**/settings/'].std = STD_DATA
 -------------------------------------------------------------------------------
 --[[Base]]--
 -------------------------------------------------------------------------------
+
 local base_scenarios = {
     std = STD_BASE_CONTROL,
     ignore = {
