@@ -91,33 +91,26 @@ files['**/settings/'].std = STD_DATA
 -------------------------------------------------------------------------------
 
 local base_scenarios = {
-    std = STD_BASE_CONTROL,
-    ignore = {
-        "111", --setting non standard global variable
-        "112/level", --mutating non standard globalal
-        "113", --accessing undefined variable
-        "211", --unused variable (24)
-        "212/event",
-        "4..", --shadowing/previously defined (37)
-    }
+    std = STD_BASE_CONTROL.."+factorio_base_scenarios+factorio_base_story",
+    ignore = {"212/event"}
 }
 files["**/base/scenarios/"] = base_scenarios
 files["**/base/tutorials/"] = base_scenarios
 files["**/base/campaigns/"] = base_scenarios
 
-files['**/base/migrations/'].std = STD_BASE_CONTROL
+files['**/base/migrations/'] = {std = STD_BASE_CONTROL}
 
-files['**/core/lualib/'].std = STD_BASE_CONTROL
+files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
 files['**/core/lualib/util.lua'] = {globals = {"util", "table"}, ignore = {"432/object"}}
 files['**/core/lualib/silo-script.lua'] = {globals = {"silo_script"}, ignore = {"4../player"}}
 files['**/core/lualib/story.lua'] = {std = "+factorio_base_story", ignore = {"42./k", "42./filter"}}
-files['**/core/lualib/mod-gui.lua'].globals = {"mod_gui"}
-files['**/core/lualib/dataloader.lua'].globals = {"data"}
-files['**/core/lualib/camera.lua'].globals = {"camera"}
-files['**/core/lualib/builder.lua'].globals = {"Builder", "builder", "action", "down", "right"}
+files['**/core/lualib/mod-gui.lua'] = {globals = {"mod_gui"}}
+files['**/core/lualib/dataloader.lua'] = {globals = {"data"}}
+files['**/core/lualib/camera.lua'] = {globals = {"camera"}}
+files['**/core/lualib/builder.lua'] = {globals = {"Builder", "builder", "action", "down", "right"}}
 
-files['**/base/prototypes/'].std = STD_BASE_DATA
-files['**/core/prototypes/'].std = STD_BASE_DATA
+files['**/base/prototypes/'] = {std = STD_BASE_DATA}
+files['**/core/prototypes/'] = {std = STD_BASE_DATA}
 
 -------------------------------------------------------------------------------
 --[[Set STDLIB project modules]]--
@@ -390,7 +383,60 @@ stds.factorio_data = {
 }
 
 stds.factorio_base_control = {
-    read_globals = {"silo_script", "mod_gui"}
+    read_globals = {"silo_script", "mod_gui", "camera"}
+}
+
+stds.factorio_base_scenarios = {
+    globals = {
+        "check_automate_science_packs_advice", "check_research_hints", "check_supplies", "manage_attacks", "all_dead",
+        "on_win", "difficulty_number", "init_attack_data", "handle_attacks", "count_items_in_container", "progress", "scanned",
+        "check_light", "check_machine_gun", "level", "story_table",
+
+        "tightspot_prices", "tightspot_make_offer", "tightspot_init", "tightspot_get_required_balance",
+        "tightspot_init_level", "tightspot_init_spending_frame", "tightspot_init_progress_frame", "tightspot_update_progress", "tightspot_update_spending",
+        "tightspot_get_missing_to_win", "tightspot_sell_back", "tightspot_start_level", "tightspot_show_level_description", "tightspot_update_speed_label",
+        "map_ignore", "tightspot_check_level", "land_price",
+
+        "transport_belt_madness_init", "transport_belt_madness_init_level", "transport_belt_madness_create_chests", "transport_belt_madness_fill_chests",
+        "transport_belt_madness_start_level", "map_ignore", "map_clear", "map_load", "map_save", "transport_belt_madness_show_level_description",
+        "transport_belt_madness_check_level", "transport_belt_madness_next_level", "transport_belt_madness_clear_level", "transport_belt_madness_contains_next_level",
+
+        "restricted", "check_built_items", "result", "disable_combat_technologies", "apply_character_modifiers", "apply_combat_modifiers", "apply_balance",
+        "load_config", "starting_area_constant", "create_next_surface", "end_round", "prepare_next_round", "silo_died","choose_joining_gui",
+        "destroy_joining_guis", "create_random_join_gui", "create_auto_assign_gui", "create_pick_join_gui", "create_config_gui", "make_config_table", "default",
+        "make_team_gui", "make_team_gui_config", "add_team_button_press", "trash_team_button_press", "remove_team_from_team_table", "add_team_to_team_table",
+        "set_teams_from_gui", "on_team_button_press", "make_color_dropdown", "create_balance_option", "create_disable_frame", "disable_frame", "parse_disabled_items",
+        "set_balance_settings", "config_confirm", "parse_config_from_gui", "get_color", "roll_starting_area", "delete_roll_surfaces", "auto_assign",
+        "destroy_config_for_all", "prepare_map", "set_evolution_factor", "update_players_on_team_count", "random_join", "init_player_gui",
+        "destroy_player_gui", "objective_button_press", "admin_button_press", "admin_frame_button_press", "diplomacy_button_press", "update_diplomacy_frame",
+        "diplomacy_frame_button_press", "team_changed_diplomacy", "diplomacy_check_press", "get_stance", "give_inventory", "setup_teams", "disable_items_for_all",
+        "set_random_team", "set_diplomacy", "create_spawn_positions", "set_spawn_position", "set_team_together_spawns", "chart_starting_area_for_force_spawns",
+        "check_starting_area_chunks_are_generated", "check_player_color", "check_round_start", "clear_starting_area_enemies", "check_no_rush_end", "check_no_rush_players",
+        "finish_setup", "chart_area_for_force", "setup_start_area_copy", "update_copy_progress", "update_progress_bar", "copy_paste_starting_area_tiles",
+        "copy_paste_starting_area_entities", "create_silo_for_force", "setup_research", "on_chunk_generated", "get_distance_to_nearest_spawn",
+        "create_wall_for_force", "fpn", "give_items", "create_item_frame", "create_technologies_frame", "create_cheat_frame", "create_day_frame",
+        "time_modifier", "points_per_second_start", "points_per_second_level_subtract", "levels", "update_info", "get_time_left", "update_time_left",
+        "on_joined", "make_frame", "update_frame", "update_table", "calculate_task_item_multiplayer", "setup_config", "select_from_probability_table",
+        "select_inventory", "select_equipment", "select_challange_type", "save_round_statistics", "start_challenge", "create_teams", "set_areas",
+        "decide_player_team", "set_teams", "refresh_leaderboard", "set_player", "generate_technology_list", "generate_research_task","setup_unlocks",
+        "check_technology_progress", "generate_production_task", "generate_shopping_list_task", "set_gui_flow_table", "create_visibility_button",
+        "check_item_lists", "update_task_gui", "check_end_of_round", "end_round_gui_update", "try_to_check_victory", "update_gui", "check_start_round",
+        "check_start_set_areas", "check_start_setting_entities", "check_set_areas", "check_clear_areas", "check_chests", "check_chests_shopping_list",
+        "check_chests_production", "check_input_chests", "fill_input_chests", "check_victory", "shopping_task_finished", "calculate_force_points",
+        "update_research_task_table", "update_production_task_table", "update_shopping_list_task_table", "create_joined_game_gui", "pre_ending_round",
+        "player_ending_prompt", "update_end_timer", "update_begin_timer", "team_finished", "save_points_list", "give_force_players_points",
+        "update_winners_list", "set_spectator", "set_character", "give_starting_inventory", "give_equipment", "shuffle_table", "format_time",
+        "spairs", "fill_leaderboard", "create_grid", "simple_entities", "save_map_data", "clear_map", "create_tiles", "recreate_entities",
+        "map_sets", "give_points", "init_forces", "init_globals", "init_unit_settings", "check_next_wave", "next_wave", "calculate_wave_power",
+        "wave_end", "make_next_spawn_tick", "check_spawn_units", "get_wave_units", "spawn_units", "randomize_ore", "set_command", "command_straglers",
+        "unit_config", "make_next_wave_tick", "time_to_next_wave", "time_to_wave_end", "rocket_died", "unit_died", "get_bounty_price", "setup_waypoints",
+        "insert_items", "give_starting_equipment", "give_spawn_equipment", "next_round_button_visible", "gui_init", "create_wave_frame", "create_money_frame",
+        "create_upgrade_gui", "update_upgrade_listing", "upgrade_research", "get_upgrades", "get_money", "update_connected_players", "update_round_number",
+        "set_research", "set_recipes", "check_deconstruction", "check_blueprint_placement", "create_entities_on_tick", "loop_entities", "experiment_items",
+        "setup", "story_gui_click", "clear_surface", "add_run_trains_button", "puzzle_condition", "basic_signals",
+        "loop_trains", "Y_offset", "clear_rails", "ghosts_1", "ghosts_2", "required_path", "through_wall_path", "count", "check_built_real_rail",
+        "current_ghosts_count", "other", "rails", "set_rails", "straight_section", "late_entities", "entities", "stop",
+    }
 }
 
 stds.factorio_base_data = {
@@ -412,7 +458,7 @@ stds.factorio_base_data = {
         "inserter_circuit_connector_sprites", "inserter_circuit_wire_connection_point", "inserter_circuit_wire_max_distance",
         "inserter_default_stack_control_input_signal",
 
-        "playeranimations", "make_unit_melee_ammo_type", "pipepictures", "smoke", "assembler2pipepictures", "assembler3pipepictures",
+        "playeranimations", "make_unit_melee_ammo_type", "pipepictures", "trivial_smoke", "smoke", "assembler2pipepictures", "assembler3pipepictures",
         "bloodtint", "shadowtint", "bloodparticlescale",
 
         "worm_folded_animation", "worm_preparing_animation", "worm_prepared_animation", "worm_attack_animation", "worm_die_animation",
