@@ -487,6 +487,8 @@ stds.factorio_base_data = {
         "laser_turret_extension", "laser_turret_extension_shadow", "laser_turret_extension_mask",
 
         "spitterattackanimation", "spitterrunanimation", "spitterdyinganimation", "spitter_attack_parameters",
+
+        "make_basis_noise_function", "make_multioctave_noise_function", "make_split_multioctave_noise_function"
     }
 }
 
