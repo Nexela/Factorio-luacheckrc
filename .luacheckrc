@@ -89,6 +89,7 @@ files['**/settings/'].std = STD_DATA
 -------------------------------------------------------------------------------
 --[[Base]]--
 -------------------------------------------------------------------------------
+--Find and replace ignores *.cfg, migrations, *.txt, control.lua, *.json, trailer, scenarios, campaigns, *.glsl
 
 local base_scenarios = {
     std = STD_BASE_CONTROL.."+factorio_base_scenarios+factorio_base_story",
@@ -163,7 +164,7 @@ stds.factorio = {
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
-                "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "conditional_return",
+                "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "make_color", "conditional_return",
                 table = {
                     fields = {
                         "compare", "deepcopy"
@@ -441,10 +442,10 @@ stds.factorio_base_scenarios = {
 
 stds.factorio_base_data = {
     globals = {
-        "default_container_padding", "default_orange_color", "default_light_orange_color", "warning_red_color", "achievement_green_color",
-        "achievement_tan_color", "make_cursor_box", "make_full_cursor_box", "orangebuttongraphcialset", "bluebuttongraphcialset",
-        "rail_pictures_internal", "pipecoverspictures",
+        --Gui
+        "make_cursor_box", "make_full_cursor_box", "make_orange_button_graphical_set", "make_blue_button_graphical_set",
 
+        --Belts
         "transport_belt_connector_frame_sprites", "transport_belt_circuit_wire_connection_point", "transport_belt_circuit_wire_max_distance",
         "transport_belt_circuit_connector_sprites", "ending_patch_prototype", "basic_belt_horizontal", "basic_belt_vertical",
         "basic_belt_ending_top", "basic_belt_ending_bottom", "basic_belt_ending_side", "basic_belt_starting_top", "basic_belt_starting_bottom",
@@ -453,42 +454,44 @@ stds.factorio_base_data = {
         "express_belt_vertical", "express_belt_ending_top", "express_belt_ending_bottom", "express_belt_ending_side", "express_belt_starting_top",
         "express_belt_starting_bottom", "express_belt_starting_side",
 
+        --Circuit Connectors
         "get_circuit_connector_sprites", "get_circuit_connector_wire_shifting_for_connector",
 
+        --Inserter Circuit Connectors
         "inserter_circuit_connector_sprites", "inserter_circuit_wire_connection_point", "inserter_circuit_wire_max_distance",
         "inserter_default_stack_control_input_signal",
 
-        "playeranimations", "make_unit_melee_ammo_type", "pipepictures", "trivial_smoke", "smoke", "assembler2pipepictures", "assembler3pipepictures",
-        "bloodtint", "shadowtint", "bloodparticlescale",
+        --Sounds/beams
+        "make_heavy_gunshot_sounds", "make_light_gunshot_sounds", "make_laser_sounds",
 
-        "worm_folded_animation", "worm_preparing_animation", "worm_prepared_animation", "worm_attack_animation", "worm_die_animation",
-
-        "make_biter_roars", "make_biter_dying_sounds", "make_biter_calls", "make_spitter_roars", "make_spitter_dying_sounds",
-        "make_worm_roars", "make_worm_dying_sounds", "make_heavy_gunshot_sounds", "make_light_gunshot_sounds",
-        "make_4way_animation_from_spritesheet", "make_heat_pipe_pictures", "make_laser_sounds", "make_beam",
-
-        "productivitymodulelimitation",
-
-        "enemy_autoplace", "enemy_spawner_autoplace", "enemy_worm_autoplace",
-
-        "gun_turret_extension", "gun_turret_extension_mask", "gun_turret_extension_shadow", "gun_turret_attack",
-
-        "spawner_idle_animation", "spawner_die_animation", "biterrunanimation", "biterattackanimation", "biterdieanimation",
-
-        "tile_variations_template", "water_autoplace_settings",
-
-        "generate_arithmetic_combinator", "generate_decider_combinator", "generate_constant_combinator",
-
-        "destroyed_rail_pictures", "rail_pictures", "standard_train_wheels", "drive_over_tie",
-        "rolling_stock_back_light", "rolling_stock_stand_by_light",
-
-        "flying_robot_sounds", "crash_trigger", "capsule_smoke",
-
+        --Gun/Laser
+        "gun_turret_extension", "gun_turret_extension_shadow", "gun_turret_extension_mask", "gun_turret_attack",
         "laser_turret_extension", "laser_turret_extension_shadow", "laser_turret_extension_mask",
 
-        "spitterattackanimation", "spitterrunanimation", "spitterdyinganimation", "spitter_attack_parameters",
+        --Pipes
+        "pipecoverspictures", "pipepictures", "assembler2pipepictures", "assembler3pipepictures", "make_heat_pipe_pictures",
 
-        "make_basis_noise_function", "make_multioctave_noise_function", "make_split_multioctave_noise_function"
+        --Combinators
+        --"generate_arithmetic_combinator", "generate_decider_combinator", "generate_constant_combinator",
+
+        --Rail
+        "destroyed_rail_pictures", "rail_pictures", "rail_pictures_internal", "standard_train_wheels", "drive_over_tie",
+        "rolling_stock_back_light", "rolling_stock_stand_by_light",
+
+        --Bugs
+        "make_enemy_autoplace", "make_enemy_spawner_autoplace", "make_enemy_worm_autoplace",
+        "make_spitter_attack_animation", "make_spitter_run_animation", "make_spitter_dying_animation",
+        "make_spitter_attack_parameters", "make_spitter_roars", "make_spitter_dying_sounds",
+        "make_spawner_idle_animation", "make_spawner_die_animation",
+        "make_biter_run_animation", "make_biter_attack_animation", "make_biter_die_animation",
+        "make_biter_roars", "make_biter_dying_sounds", "make_biter_calls",
+        "make_worm_roars", "make_worm_dying_sounds", "make_worm_folded_animation", "make_worm_preparing_animation",
+        "make_worm_prepared_animation", "make_worm_attack_animation", "make_worm_die_animation",
+
+        --Other
+        "tile_variations_template", "make_water_autoplace_settings",
+        "make_unit_melee_ammo_type",  "make_trivial_smoke", "make_4way_animation_from_spritesheet", "make_flying_robot_sounds",
+        "productivitymodulelimitation", "crash_trigger", "capsule_smoke",
     }
 }
 
