@@ -63,14 +63,21 @@ ignore = IGNORE
 
 --List of files and directories to exclude
 exclude_files = {
+    --Ignore special folders
     "**/.*", --Ignore if path starts with .
     "**/mod/stdlib/", --Ignore from symlinked
     "**/build/",
     "**/deprecated/",
 
+    --Ignore development mods
     "**/combat-tester/",
     "**/test-maker/",
     "**/trailer/",
+
+    --Temporarily ignore these
+    --"**/scenarios/",
+    --"**/tutorials/",
+    --"**/campaigns/",
 }
 
 -------------------------------------------------------------------------------
@@ -104,6 +111,7 @@ files['**/base/migrations/'] = {std = STD_BASE_CONTROL}
 files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
 files['**/core/lualib/util.lua'] = {globals = {"util", "table"}, ignore = {"432/object"}}
 files['**/core/lualib/silo-script.lua'] = {globals = {"silo_script"}, ignore = {"4../player"}}
+files['**/core/lualib/production-score.lua'] = {globals = {"production_score", "get_price_recursive"}, ignore = {"4../player"}}
 files['**/core/lualib/story.lua'] = {std = "+factorio_base_story", ignore = {"42./k", "42./filter"}}
 files['**/core/lualib/mod-gui.lua'] = {globals = {"mod_gui"}}
 files['**/core/lualib/dataloader.lua'] = {globals = {"data"}}
@@ -165,6 +173,7 @@ stds.factorio = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
                 "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "make_color", "conditional_return",
+                "add_shift",
                 table = {
                     fields = {
                         "compare", "deepcopy"
@@ -433,17 +442,21 @@ stds.factorio_base_scenarios = {
         "unit_config", "make_next_wave_tick", "time_to_next_wave", "time_to_wave_end", "rocket_died", "unit_died", "get_bounty_price", "setup_waypoints",
         "insert_items", "give_starting_equipment", "give_spawn_equipment", "next_round_button_visible", "gui_init", "create_wave_frame", "create_money_frame",
         "create_upgrade_gui", "update_upgrade_listing", "upgrade_research", "get_upgrades", "get_money", "update_connected_players", "update_round_number",
-        "set_research", "set_recipes", "check_deconstruction", "check_blueprint_placement", "create_entities_on_tick", "loop_entities", "experiment_items",
+        "set_research", "set_recipes", "check_deconstruction", "check_blueprint_placement", "loop_entities", "experiment_items",
         "setup", "story_gui_click", "clear_surface", "add_run_trains_button", "puzzle_condition", "basic_signals",
-        "loop_trains", "Y_offset", "clear_rails", "ghosts_1", "ghosts_2", "required_path", "through_wall_path", "count", "check_built_real_rail",
+        "loop_trains", "Y_offset", "ghosts_1", "ghosts_2", "required_path", "through_wall_path", "count", "check_built_real_rail",
         "current_ghosts_count", "other", "rails", "set_rails", "straight_section", "late_entities", "entities", "stop",
+
+        --"clear_rails", "create_entities_on_tick",
     }
 }
 
 stds.factorio_base_data = {
     globals = {
-        --Gui
-        "make_cursor_box", "make_full_cursor_box", "make_orange_button_graphical_set", "make_blue_button_graphical_set",
+        --Style
+        "make_cursor_box", "make_full_cursor_box",
+        "default_container_padding", "default_orange_color", "default_light_orange_color", "warning_red_color",
+        "achievement_green_color", "achievement_tan_color", "orangebuttongraphcialset", "bluebuttongraphcialset",
 
         --Belts
         "transport_belt_connector_frame_sprites", "transport_belt_circuit_wire_connection_point", "transport_belt_circuit_wire_max_distance",
@@ -455,11 +468,13 @@ stds.factorio_base_data = {
         "express_belt_starting_bottom", "express_belt_starting_side",
 
         --Circuit Connectors
-        "get_circuit_connector_sprites", "get_circuit_connector_wire_shifting_for_connector",
+        --"get_circuit_connector_sprites", "get_circuit_connector_wire_shifting_for_connector",
+        "circuit_connector_definitions", "default_circuit_wire_max_distance", "inserter_circuit_wire_max_distance",
+        "universal_connector_template", "belt_connector_template", "belt_frame_connector_template", "inserter_connector_template",
 
         --Inserter Circuit Connectors
-        "inserter_circuit_connector_sprites", "inserter_circuit_wire_connection_point", "inserter_circuit_wire_max_distance",
-        "inserter_default_stack_control_input_signal",
+        --"inserter_circuit_connector_sprites", "inserter_circuit_wire_connection_point",
+        "inserter_circuit_wire_max_distance", "inserter_default_stack_control_input_signal",
 
         --Sounds/beams
         "make_heavy_gunshot_sounds", "make_light_gunshot_sounds", "make_laser_sounds",
@@ -472,7 +487,7 @@ stds.factorio_base_data = {
         "pipecoverspictures", "pipepictures", "assembler2pipepictures", "assembler3pipepictures", "make_heat_pipe_pictures",
 
         --Combinators
-        --"generate_arithmetic_combinator", "generate_decider_combinator", "generate_constant_combinator",
+        "generate_arithmetic_combinator", "generate_decider_combinator", "generate_constant_combinator",
 
         --Rail
         "destroyed_rail_pictures", "rail_pictures", "rail_pictures_internal", "standard_train_wheels", "drive_over_tie",
@@ -491,7 +506,9 @@ stds.factorio_base_data = {
         --Other
         "tile_variations_template", "make_water_autoplace_settings",
         "make_unit_melee_ammo_type",  "make_trivial_smoke", "make_4way_animation_from_spritesheet", "make_flying_robot_sounds",
-        "productivitymodulelimitation", "crash_trigger", "capsule_smoke",
+        "productivitymodulelimitation", "crash_trigger", "capsule_smoke", "make_beam",
+
+        "playeranimations",
     }
 }
 
@@ -506,6 +523,7 @@ stds.factorio_base_story = {
         "message_log_table", "toggle_message_log_button", "toggle_objective_button", "message_log_init",
         "add_gui_recursive", "add_toggle_message_log_button", "add_toggle_objective_button", "mod_gui",
         "flash_message_log_button", "flash_message_log_on_tick", "story_gui_click", "story_points_by_name", "story_branches",
+        "player", "surface", "deconstruct_on_tick", "recreate_entities_on_tick", "flying_congrats"
     }
 }
 
