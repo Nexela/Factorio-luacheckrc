@@ -595,6 +595,7 @@ stds.factorio_defines = {
             fields = {
                 events = {
                     fields = {
+                        "on_preplayer_mined_item", --DEFUNCT .16
                         "on_biter_base_built", --Called when a biter migration builds a base.
                         "on_built_entity", --Called when player builds something.
                         "on_canceled_deconstruction", --Called when the deconstruction of an entity is canceled.
