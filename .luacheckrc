@@ -34,7 +34,7 @@
 -- Set up the the standards for this file.
 files['.luacheckrc'] = {
     std = "lua52c",
-    globals = {"files", "exclude_files", "not_globals", "stds", "std", "max_line_length"},
+    globals = {"files", "exclude_files", "not_globals", "stds", "std", "max_line_length", "ignore"},
     max_line_length = false, --turn of line length warnings for this file
 }
 
@@ -64,7 +64,7 @@ ignore = IGNORE
 --List of files and directories to exclude
 exclude_files = {
     --Ignore special folders
-    "**/.*", --Ignore if path starts with .
+    "**/.*/*", --Ignore if path starts with .
     "**/mod/stdlib/", --Ignore from symlinked
     "**/build/",
     "**/deprecated/",
