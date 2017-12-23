@@ -343,6 +343,10 @@ stds.factorio_control = {
                     read_only = true,
                     other_fields = true
                 },
+                backer_names = {
+                    read_only = true,
+                    other_fields = true
+                }
             },
         },
     },
