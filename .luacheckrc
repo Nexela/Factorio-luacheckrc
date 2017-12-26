@@ -563,7 +563,7 @@ stds.stdlib_control = {
                     read_only = true,
                     other_fields = false,
                     fields = {
-                        "init", "configuration_changed", "load", "_register", "init_and_config"
+                        "init", "configuration_changed", "load", "_register", "_remove", "init_and_config"
                     },
                 },
             },
