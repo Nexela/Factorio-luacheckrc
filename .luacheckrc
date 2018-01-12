@@ -46,7 +46,7 @@ local IGNORE = {"21./%w+_$", "213/[ijk]", "213/index"}
 local NOT_GLOBALS = {"coroutine", "io", "socket", "dofile", "loadfile"} -- These globals are not available to the factorio API
 
 local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
-local STD_DATA = "lua52c+factorio+factorio_data+stdlib+factorio_defines"
+local STD_DATA = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
 
 -- In a perfect world these would be STD_DATA and STD_CONTROL (mostly)
 local STD_BASE_DATA = "lua52c+factorio+factorio_data+factorio_defines+factorio_base_data"
@@ -590,6 +590,10 @@ stds.stdlib_control = {
         "Config",
         "Logger",
     },
+}
+
+stds.stdlib_data = {
+    globals = {"Data", "Recipe", "Item", "Fluid", "Entity", "Technology", "Category", "Pipes"}
 }
 
 stds.factorio_defines = {
