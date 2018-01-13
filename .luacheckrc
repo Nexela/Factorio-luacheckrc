@@ -603,7 +603,6 @@ stds.factorio_defines = {
             fields = {
                 events = {
                     fields = {
-                        "on_preplayer_mined_item", --DEFUNCT .16
                         "on_biter_base_built", --Called when a biter migration builds a base.
                         "on_built_entity", --Called when player builds something.
                         "on_canceled_deconstruction", --Called when the deconstruction of an entity is canceled.
@@ -634,6 +633,7 @@ stds.factorio_defines = {
                         "on_player_ammo_inventory_changed", --Called after a players ammo inventory changed in some way.
                         "on_player_armor_inventory_changed", --Called after a players armor inventory changed in some way.
                         "on_player_built_tile", --Called after a player builds tiles.
+                        "on_player_cancelled_crafting",
                         "on_player_changed_force", --Called after a player changes forces.
                         "on_player_changed_position", --Called when the tile position a player is located at changes.
                         "on_player_changed_surface", --Called after a player changes surfaces.
@@ -643,6 +643,8 @@ stds.factorio_defines = {
                         "on_player_crafted_item", --Called when the player crafts an item (upon inserting into player's inventory, not clicking the button to craft).
                         "on_player_created", --Called after the player was created.
                         "on_player_cursor_stack_changed", --Called after a players cursorstack changed in some way.
+                        "on_player_display_resolution_changed",
+                        "on_player_display_scale_changed",
                         "on_player_deconstructed_area", --Called when a player selects an area with a deconstruction planner.
                         "on_player_demoted", --Called when a player is demoted.
                         "on_player_died", --Called after a player dies.
@@ -671,6 +673,7 @@ stds.factorio_defines = {
                         "on_player_used_capsule", --Called when a player uses a capsule that results in some game action.
                         "on_pre_entity_settings_pasted", --Called before entity copy-paste is done.
                         "on_pre_ghost_deconstructed", --Called before a ghost entity is destroyed as a result of being marked for deconstruction.
+                        "on_pre_player_crafted_item",
                         "on_pre_player_died", --Called before a players dies.
                         "on_pre_player_mined_item", --Called when the player finishes mining an entity, before the entity is removed from map.
                         "on_pre_surface_deleted", --Called just before a surface is deleted.
