@@ -118,6 +118,7 @@ files['**/core/lualib/dataloader.lua'] = {globals = {"data"}}
 files['**/core/lualib/camera.lua'] = {globals = {"camera"}}
 files['**/core/lualib/builder.lua'] = {globals = {"Builder", "builder", "action", "down", "right"}}
 
+files['**/core/lualib/bonus-gui-ordering/'] = {std = STD_BASE_DATA}
 files['**/base/prototypes/'] = {std = STD_BASE_DATA}
 files['**/core/prototypes/'] = {std = STD_BASE_DATA}
 
@@ -461,6 +462,8 @@ stds.factorio_base_data = {
         "make_cursor_box", "make_full_cursor_box",
         "default_container_padding", "default_orange_color", "default_light_orange_color", "warning_red_color",
         "achievement_green_color", "achievement_tan_color", "orangebuttongraphcialset", "bluebuttongraphcialset",
+
+        "bonus_gui_ordering", "trivial_smoke",
 
         --Belts
         "transport_belt_connector_frame_sprites", "transport_belt_circuit_wire_connection_point", "transport_belt_circuit_wire_max_distance",
