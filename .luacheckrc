@@ -66,8 +66,6 @@ exclude_files = {
     --Ignore special folders
     "**/.*/*", --Ignore if path starts with .
     "**/mod/stdlib/", --Ignore from symlinked
-    "**/build/",
-    "**/deprecated/",
 
     --Ignore development mods
     "**/combat-tester/",
