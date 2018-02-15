@@ -26,7 +26,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 --
 -- For more information, please refer to <http://unlicense.org/>
---]]
+-- ]]
 
 -------------------------------------------------------------------------------
 --[[.luacheckrc]]-- Current Factorio Version .16
