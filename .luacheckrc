@@ -146,6 +146,7 @@ files["**/stdlib/utils/math.lua"].std = "lua52c"
 files["**/stdlib/utils/string.lua"].std = "lua52c"
 files["**/stdlib/utils/table.lua"].std = "lua52c"
 files["**/stdlib/utils/iterator.lua"].std = "lua52c"
+files["**/stdlib/utils/is.lua"].std = "lua52c"
 
 -- STDLIB data files
 files["**/stdlib/data/"] = stdlib_data
@@ -154,7 +155,7 @@ files["**/creative"].ignore = {"..."}
 
 -- STDLIB Busted Spec
 files['**/spec/**'] = {
-    globals = {"Event", "Gui", "Config", "Logger", "Core", "serpent", "log", "SLOG", "RESET"},
+    globals = {"Event", "Gui", "serpent", "log", "SLOG", "RESET"}, --"Config", "Logger", "Core",
     std = "lua52c+busted+factorio_defines+factorio_control+stdlib_control+stdlib",
 }
 
@@ -549,9 +550,12 @@ stds.stdlib = {
                 "trim", "starts_with", "ends_with", "contains", "is_empty", "split", "pretty_number",
             },
         },
-        iter = {
+        Iter = {
             read_only = true,
             other_fields = true,
+        },
+        Is = {
+            other_fields = true
         },
     }
 }
@@ -590,13 +594,13 @@ stds.stdlib_control = {
                 }
             },
         },
-        "Config",
-        "Logger",
+        --"Config",
+        --"Logger",
     },
 }
 
 stds.stdlib_data = {
-    globals = {"Data", "Recipe", "Item", "Fluid", "Entity", "Technology", "Category", "Pipes"}
+    globals = {"Data", "Recipe", "Item", "Fluid", "Entity", "Technology", "Category"}
 }
 
 stds.factorio_defines = {
