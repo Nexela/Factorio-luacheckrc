@@ -540,7 +540,7 @@ stds.stdlib = {
             fields = {
                 "map", "filter", "find", "any", "each", "flatten", "first", "last",
                 "min", "max", "sum", "avg", "merge", "deepcopy", "values", "keys",
-                "remove_keys", "invert", "count_keys", "size", "arr_to_bool",
+                "remove_keys", "invert", "count_keys", "size", "arr_to_bool", "clear", "is_empty"
             },
         },
         string = {
@@ -548,13 +548,13 @@ stds.stdlib = {
                 "trim", "starts_with", "ends_with", "contains", "is_empty", "split", "pretty_number",
             },
         },
-        Iter = {
+        math = {
             read_only = true,
             other_fields = true,
         },
-        Is = {
-            other_fields = true
-        },
+    },
+    globals = {
+        "prequire", "rawtostring"
     }
 }
 
@@ -592,8 +592,6 @@ stds.stdlib_control = {
                 }
             },
         },
-        --"Config",
-        --"Logger",
     },
 }
 
