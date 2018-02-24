@@ -202,7 +202,10 @@ stds.factorio_control = {
         -- @settings@:
         settings = {
             fields = {
-                "get_player_settings", "startup", "global", "player",
+                "get_player_settings",
+                startup = {read_only = false, other_fields = true},
+                global = {read_only = false, other_fields = true},
+                player = {read_only = false, other_fields = true},
             },
         },
 
@@ -210,7 +213,7 @@ stds.factorio_control = {
         -- (http://lua-api.factorio.com/latest/LuaBootstrap.html)
         script = {
             fields = {
-                "on_event", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
+                "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
                 "raise_event", "get_event_handler", "mod_name",
             },
         },
