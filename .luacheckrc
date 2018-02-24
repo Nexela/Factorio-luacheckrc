@@ -208,8 +208,8 @@ stds.factorio_control = {
         -- (http://lua-api.factorio.com/latest/LuaBootstrap.html)
         script = {
             fields = {
-                "on_event", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
-                "raise_event", "get_event_handler", "mod_name", 'on_nth_tick',
+                "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
+                "raise_event", "get_event_handler", "mod_name",
             },
         },
 
