@@ -45,7 +45,7 @@ local LINE_LENGTH = false -- It is 2017 limits on length are a waste
 local IGNORE = {"21./%w+_$", "213/[ijk]", "213/index"}
 local NOT_GLOBALS = {"coroutine", "io", "socket", "dofile", "loadfile"} -- These globals are not available to the factorio API
 
-local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines"
+local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+factorio_defines"
 local STD_DATA = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
 
 -- In a perfect world these would be STD_DATA and STD_CONTROL (mostly)
@@ -124,7 +124,7 @@ files['**/core/prototypes/'] = {std = STD_BASE_DATA}
 --[[Set STDLIB project modules]]--
 -------------------------------------------------------------------------------
 local stdlib_control = {
-    std = "lua52c+factorio+factorio_control+stdlib+stdlib_control+factorio_defines",
+    std = "lua52c+factorio+factorio_control+stdlib+factorio_defines",
     max_line_length = LINE_LENGTH,
 }
 
@@ -136,10 +136,6 @@ local stdlib_data = {
 -- Assume control stage for stdlib
 files["**/stdlib/"] = stdlib_control
 
--- STDLIB global mutates
-files["**/stdlib/string.lua"] = {std = "lua52c", globals = {"string"}} --DEPRECATED
-files["**/stdlib/table.lua"] = {std = "lua52c", globals = {"table"}, ignore = {"table_size"}} --DEPRECATED
-
 files["**/stdlib/utils/math.lua"].std = "lua52c"
 files["**/stdlib/utils/string.lua"].std = "lua52c"
 files["**/stdlib/utils/table.lua"].std = "lua52c"
@@ -148,13 +144,12 @@ files["**/stdlib/utils/is.lua"].std = "lua52c"
 
 -- STDLIB data files
 files["**/stdlib/data/"] = stdlib_data
-files["**/stdlib/prototype"] = stdlib_data --DEPRECATED
 files["**/creative"].ignore = {"..."}
 
 -- STDLIB Busted Spec
 files['**/spec/**'] = {
-    globals = {"Event", "Gui", "serpent", "log", "SLOG", "RESET"}, --"Config", "Logger", "Core",
-    std = "lua52c+busted+factorio_defines+factorio_control+stdlib_control+stdlib",
+    globals = {"serpent", "log", "SLOG", "RESET"},
+    std = "lua52c+busted+factorio_defines+factorio_control+stdlib",
 }
 
 -------------------------------------------------------------------------------
@@ -202,7 +197,10 @@ stds.factorio_control = {
         -- @settings@:
         settings = {
             fields = {
-                "get_player_settings", "startup", "global", "player",
+                "get_player_settings",
+                startup = {read_only = false, other_fields = true},
+                global = {read_only = false, other_fields = true},
+                player = {read_only = false, other_fields = true},
             },
         },
 
@@ -211,7 +209,7 @@ stds.factorio_control = {
         script = {
             fields = {
                 "on_event", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
-                "raise_event", "get_event_handler", "mod_name",
+                "raise_event", "get_event_handler", "mod_name", 'on_nth_tick',
             },
         },
 
@@ -554,49 +552,19 @@ stds.stdlib = {
         },
     },
     globals = {
-        "prequire", "rawtostring"
+        "prequire", "rawtostring",
+         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
+            "EVENT", "GUI", "PLAYER", "FORCE",
     }
 }
 
 stds.stdlib_control = {
-    -- STDLIB globals
-    globals = {
-        Event = {
-            other_fields = true,
-            fields = {
-                core_events = {
-                    read_only = true,
-                    other_fields = false,
-                    fields = {
-                        "init", "configuration_changed", "load", "_register", "_remove", "init_and_config"
-                    },
-                },
-            },
-        },
-        Gui = {
-            fields = {
-                on_click = {
-                    read_only = true,
-                },
-                on_text_changed = {
-                    read_only = true,
-                },
-                on_checked_state_changed = {
-                    read_only = true,
-                },
-                on_elem_changed = {
-                    read_only = true,
-                },
-                on_selection_state_changed = {
-                    read_only = true
-                }
-            },
-        },
-    },
 }
 
 stds.stdlib_data = {
-    globals = {"Data", "Recipe", "Item", "Fluid", "Entity", "Technology", "Category"}
+    globals = {
+        'DATA', 'RECIPE', 'ITEM', 'FLUID', 'ENTITY', 'TECHNOLOGY', 'CATEGORY'
+    }
 }
 
 stds.factorio_defines = {
