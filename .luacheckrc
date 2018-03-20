@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
---[[LICENSE]]--
+--[LICENSE]--
 -------------------------------------------------------------------------------
 -- .luacheckrc
 -- This file is free and unencumbered software released into the public domain.
@@ -29,31 +29,31 @@
 -- ]]
 
 -------------------------------------------------------------------------------
---[[.luacheckrc]]-- Current Factorio Version .16
+--[.luacheckrc]-- Current Factorio Version .16
 -------------------------------------------------------------------------------
 -- Set up the the standards for this file.
 files['.luacheckrc'] = {
-    std = "lua52c",
-    globals = {"files", "exclude_files", "not_globals", "stds", "std", "max_line_length", "ignore"},
-    max_line_length = false, --turn of line length warnings for this file
+    std = 'lua52c',
+    globals = {'files', 'exclude_files', 'not_globals', 'stds', 'std', 'max_line_length', 'ignore'},
+    max_line_length = false --turn of line length warnings for this file
 }
 
 -------------------------------------------------------------------------------
---[[Set Defaults]]--
+--[Set Defaults]--
 -------------------------------------------------------------------------------
 local LINE_LENGTH = false -- It is 2017 limits on length are a waste
-local IGNORE = {"21./%w+_$", "213/[ijk]", "213/index"}
-local NOT_GLOBALS = {"coroutine", "io", "socket", "dofile", "loadfile"} -- These globals are not available to the factorio API
+local IGNORE = {'21./%w+_$', '21./_%w+$', '213/[ijk]', '213/index'}
+local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'} -- These globals are not available to the factorio API
 
-local STD_CONTROL = "lua52c+factorio+factorio_control+stdlib+factorio_defines"
-local STD_DATA = "lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines"
+local STD_CONTROL = 'lua52c+factorio+factorio_control+stdlib+factorio_defines'
+local STD_DATA = 'lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines'
 
 -- In a perfect world these would be STD_DATA and STD_CONTROL (mostly)
-local STD_BASE_DATA = "lua52c+factorio+factorio_data+factorio_defines+factorio_base_data"
-local STD_BASE_CONTROL = "lua52c+factorio+factorio_control+factorio_defines+factorio_base_control"
+local STD_BASE_DATA = 'lua52c+factorio+factorio_data+factorio_defines+factorio_base_data'
+local STD_BASE_CONTROL = 'lua52c+factorio+factorio_control+factorio_defines+factorio_base_control'
 
 -------------------------------------------------------------------------------
---[[Assume Factorio Control stage as default]]--
+--[Assume Factorio Control stage as default]--
 -------------------------------------------------------------------------------
 std = STD_CONTROL
 max_line_length = LINE_LENGTH
@@ -64,13 +64,12 @@ ignore = IGNORE
 --List of files and directories to exclude
 exclude_files = {
     --Ignore special folders
-    "**/.*/*", --Ignore if path starts with .
-    "**/mod/stdlib/", --Ignore from symlinked
-
+    '**/.*/*', --Ignore if path starts with .
+    '**/mod/stdlib/', --Ignore from symlinked
     --Ignore development mods
-    "**/combat-tester/",
-    "**/test-maker/",
-    "**/trailer/",
+    '**/combat-tester/',
+    '**/test-maker/',
+    '**/trailer/'
 
     --Temporarily ignore these
     --"**/scenarios/",
@@ -79,7 +78,7 @@ exclude_files = {
 }
 
 -------------------------------------------------------------------------------
---[[Mod Prototypes]]--
+--[Mod Prototypes]--
 -------------------------------------------------------------------------------
 --Set default prototype files
 files['**/data.lua'].std = STD_DATA
@@ -92,68 +91,69 @@ files['**/prototypes/'].std = STD_DATA
 files['**/settings/'].std = STD_DATA
 
 -------------------------------------------------------------------------------
---[[Base]]--
+--[Base]--
 -------------------------------------------------------------------------------
 --Find and replace ignores *.cfg, migrations, *.txt, control.lua, *.json, trailer, scenarios, campaigns, *.glsl
 
 local base_scenarios = {
-    std = STD_BASE_CONTROL.."+factorio_base_scenarios+factorio_base_story",
-    ignore = {"212/event"}
+    std = STD_BASE_CONTROL .. '+factorio_base_scenarios+factorio_base_story',
+    ignore = {'212/event'}
 }
-files["**/base/scenarios/"] = base_scenarios
-files["**/base/tutorials/"] = base_scenarios
-files["**/base/campaigns/"] = base_scenarios
+files['**/base/scenarios/'] = base_scenarios
+files['**/base/tutorials/'] = base_scenarios
+files['**/base/campaigns/'] = base_scenarios
 
 files['**/base/migrations/'] = {std = STD_BASE_CONTROL}
 
 files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
-files['**/core/lualib/util.lua'] = {globals = {"util", "table"}, ignore = {"432/object"}}
-files['**/core/lualib/silo-script.lua'] = {globals = {"silo_script"}, ignore = {"4../player"}}
-files['**/core/lualib/production-score.lua'] = {globals = {"production_score", "get_price_recursive"}, ignore = {"4../player"}}
-files['**/core/lualib/story.lua'] = {std = "+factorio_base_story", ignore = {"42./k", "42./filter"}}
-files['**/core/lualib/mod-gui.lua'] = {globals = {"mod_gui"}}
-files['**/core/lualib/dataloader.lua'] = {globals = {"data"}}
-files['**/core/lualib/camera.lua'] = {globals = {"camera"}}
-files['**/core/lualib/builder.lua'] = {globals = {"Builder", "builder", "action", "down", "right"}}
+files['**/core/lualib/util.lua'] = {globals = {'util', 'table'}, ignore = {'432/object'}}
+files['**/core/lualib/silo-script.lua'] = {globals = {'silo_script'}, ignore = {'4../player'}}
+files['**/core/lualib/production-score.lua'] = {globals = {'production_score', 'get_price_recursive'}, ignore = {'4../player'}}
+files['**/core/lualib/story.lua'] = {std = '+factorio_base_story', ignore = {'42./k', '42./filter'}}
+files['**/core/lualib/mod-gui.lua'] = {globals = {'mod_gui'}}
+files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
+files['**/core/lualib/camera.lua'] = {globals = {'camera'}}
+files['**/core/lualib/builder.lua'] = {globals = {'Builder', 'builder', 'action', 'down', 'right'}}
 
 files['**/core/lualib/bonus-gui-ordering/'] = {std = STD_BASE_DATA}
 files['**/base/prototypes/'] = {std = STD_BASE_DATA}
 files['**/core/prototypes/'] = {std = STD_BASE_DATA}
 
 -------------------------------------------------------------------------------
---[[Set STDLIB project modules]]--
+--[Set STDLIB project modules]--
 -------------------------------------------------------------------------------
 local stdlib_control = {
-    std = "lua52c+factorio+factorio_control+stdlib+factorio_defines",
-    max_line_length = LINE_LENGTH,
+    std = 'lua52c+factorio+factorio_control+stdlib+factorio_defines',
+    max_line_length = LINE_LENGTH
 }
 
 local stdlib_data = {
-    std = "lua52c+factorio+factorio_data+stdlib+factorio_defines",
-    max_line_length = LINE_LENGTH,
+    std = 'lua52c+factorio+factorio_data+stdlib+factorio_defines',
+    max_line_length = LINE_LENGTH
 }
 
 -- Assume control stage for stdlib
-files["**/stdlib/"] = stdlib_control
+files['**/stdlib/'] = stdlib_control
 
-files["**/stdlib/utils/math.lua"].std = "lua52c"
-files["**/stdlib/utils/string.lua"].std = "lua52c"
-files["**/stdlib/utils/table.lua"].std = "lua52c"
-files["**/stdlib/utils/iterator.lua"].std = "lua52c"
-files["**/stdlib/utils/is.lua"].std = "lua52c"
+files['**/stdlib/utils/math.lua'].std = 'lua52c'
+files['**/stdlib/utils/string.lua'].std = 'lua52c'
+files['**/stdlib/utils/table.lua'].std = 'lua52c'
+files['**/stdlib/utils/iterator.lua'].std = 'lua52c'
+files['**/stdlib/utils/is.lua'].std = 'lua52c'
 
 -- STDLIB data files
-files["**/stdlib/data/"] = stdlib_data
-files["**/creative"].ignore = {"..."}
+files['**/stdlib/data/'] = stdlib_data
+files['**/creative'].ignore = {'...'}
 
 -- STDLIB Busted Spec
 files['**/spec/**'] = {
-    globals = {"serpent", "log", "SLOG", "RESET"},
-    std = "lua52c+busted+factorio_defines+factorio_control+stdlib",
+    globals = {'serpent', 'log', 'SLOG', 'RESET'},
+    std = 'lua52c+busted+factorio_defines+factorio_control+stdlib'
 }
 
+
 -------------------------------------------------------------------------------
---[[STDS FACTORIO]]--
+--[STDS FACTORIO]--
 -------------------------------------------------------------------------------
 stds.factorio = {
     --Set the read only variables
@@ -533,22 +533,24 @@ stds.factorio_base_story = {
 
 stds.stdlib = {
     read_globals = {
-        -- Don't warn on mutated globals.
         table = {
             fields = {
                 "map", "filter", "find", "any", "each", "flatten", "first", "last",
                 "min", "max", "sum", "avg", "merge", "deepcopy", "values", "keys",
-                "remove_keys", "invert", "count_keys", "size", "arr_to_bool", "clear", "is_empty"
+                "remove_keys", "invert", "count_keys", "size", "array_to_dictionary", "clear", "is_empty"
             },
         },
         string = {
             fields = {
-                "trim", "starts_with", "ends_with", "contains", "is_empty", "split", "pretty_number",
+                "dictionary_merge", "each", "array_to_dictionary", "count_keys", "min", "filter", "remove_keys", "map", "find", "clear", "deepcopy", "any",
+                "avg", "flatten", "is_empty", "size", "max", "invert", "keys", "first", "values", "sum", "last", "merge"
             },
         },
         math = {
-            read_only = true,
-            other_fields = true,
+            fields = {
+                "avg", "arithmetic_mean", "floor_to", "quadratic_mean", "sum", "generalized_mean", "round", "geometric_mean", "energetic_mean",
+                "midrange_mean", "weighted_mean", "round_to", "harmonic_mean"
+            }
         },
     },
     globals = {
