@@ -536,7 +536,7 @@ stds.stdlib = {
         table = {
             fields = {
                 "map", "filter", "find", "any", "each", "flatten", "first", "last",
-                "min", "max", "sum", "avg", "merge", "deepcopy", "values", "keys",
+                "min", "max", "sum", "avg", "merge", "deepcopy", "flexcopy", "values", "keys",
                 "remove_keys", "invert", "count_keys", "size", "array_to_dictionary", "clear", "is_empty"
             },
         },
@@ -576,103 +576,24 @@ stds.factorio_defines = {
             fields = {
                 events = {
                     fields = {
-                        "on_biter_base_built", --Called when a biter migration builds a base.
-                        "on_built_entity", --Called when player builds something.
-                        "on_canceled_deconstruction", --Called when the deconstruction of an entity is canceled.
-                        "on_character_corpse_expired", --Called when a character corpse expires due to timeout or all of the items being removed from it.
-                        "on_chunk_generated", --Called when a chunk is generated.
-                        "on_combat_robot_expired", --Called when a combat robot expires through a lack of energy, or timeout.
-                        "on_console_chat", --Called when someone talks in-game either a player or through the server interface.
-                        "on_console_command", --Called when someone enters a command-like message regardless of it being a valid command.
-                        "on_difficulty_settings_changed", --Called when the map difficulty settings are changed.
-                        "on_entity_died", --Called when an entity dies.
-                        "on_entity_renamed", --Called after an entity has been renamed either by the player or through script.
-                        "on_entity_settings_pasted", --Called after entity copy-paste is done.
-                        "on_force_created", --Called when a new force is created using game.create_force()
-                        "on_forces_merging", --Called when two forces are merged using game.merge_forces().
-                        "on_gui_checked_state_changed", --Called when LuaGuiElement checked state is changed (related to checkboxes and radio buttons)
-                        "on_gui_click", --Called when LuaGuiElement is clicked.
-                        "on_gui_closed", --Called when the player closes the GUI they have open.
-                        "on_gui_elem_changed", --Called when LuaGuiElement element value is changed (related to choose element buttons)
-                        "on_gui_opened", --Called when the player opens a GUI.
-                        "on_gui_selection_state_changed", --Called when LuaGuiElement selection state is changed (related to drop-downs)
-                        "on_gui_text_changed", --Called when LuaGuiElement text is changed by the player
-                        "on_gui_value_changed", --Called when LuaGuiElement slider value is changed (related to the slider element)
-                        "on_marked_for_deconstruction", --Called when an entity is marked for deconstruction with the Deconstruction planner or via script.
-                        "on_market_item_purchased", --Called after a player purchases some offer from a Market entity.
-                        "on_mod_item_opened", --Called when the player uses the 'Open item GUI' control on an item defined with 'can_be_mod_opened' as true
-                        "on_picked_up_item", --Called when a player picks up an item.
-                        "on_player_alt_selected_area", --Called after a player alt-selects an area with a selection-tool item.
-                        "on_player_ammo_inventory_changed", --Called after a players ammo inventory changed in some way.
-                        "on_player_armor_inventory_changed", --Called after a players armor inventory changed in some way.
-                        "on_player_built_tile", --Called after a player builds tiles.
-                        "on_player_cancelled_crafting",
-                        "on_player_changed_force", --Called after a player changes forces.
-                        "on_player_changed_position", --Called when the tile position a player is located at changes.
-                        "on_player_changed_surface", --Called after a player changes surfaces.
-                        "on_player_cheat_mode_disabled", --Called when cheat mode is disabled on a player.
-                        "on_player_cheat_mode_enabled", --Called when cheat mode is enabled on a player.
-                        "on_player_configured_blueprint", --Called when a player clicks the "confirm" button in the configure Blueprint GUI.
-                        "on_player_crafted_item", --Called when the player crafts an item (upon inserting into player's inventory, not clicking the button to craft).
-                        "on_player_created", --Called after the player was created.
-                        "on_player_cursor_stack_changed", --Called after a players cursorstack changed in some way.
-                        "on_player_display_resolution_changed",
-                        "on_player_display_scale_changed",
-                        "on_player_deconstructed_area", --Called when a player selects an area with a deconstruction planner.
-                        "on_player_demoted", --Called when a player is demoted.
-                        "on_player_died", --Called after a player dies.
-                        "on_player_driving_changed_state", --Called when the player's driving state has changed, this means a player has either entered or left a vehicle.
-                        "on_player_dropped_item", --Called when a player drops an item on the ground.
-                        "on_player_gun_inventory_changed", --Called after a players gun inventory changed in some way.
-                        "on_player_joined_game", --Called after a player joins the game.
-                        "on_player_left_game", --Called after a player leaves the game.
-                        "on_player_main_inventory_changed", --Called after a players main inventory changed in some way.
-                        "on_player_mined_entity", --Called after the results of an entity being mined are collected just before the entity is destroyed.
-                        "on_player_mined_item", --Called when the player mines something.
-                        "on_player_mined_tile", --Called after a player mines tiles.
-                        "on_player_muted", --Called when a player is muted.
-                        "on_player_pipette", --Called when a player invokes the "smart pipette" over an entity.
-                        "on_player_placed_equipment", --Called after the player puts equipment in an equipment grid
-                        "on_player_promoted", --Called when a player is promoted.
-                        "on_player_quickbar_inventory_changed", --Called after a players quickbar inventory changed in some way.
-                        "on_player_removed", --Called when a player is removed (deleted) from the game.
-                        "on_player_removed_equipment", --Called after the player removes equipment from an equipment grid
-                        "on_player_respawned", --Called after a player respawns.
-                        "on_player_rotated_entity", --Called when the player rotates an entity.
-                        "on_player_selected_area", --Called after a player selects an area with a selection-tool item.
-                        "on_player_setup_blueprint", --Called when a player selects an area with a blueprint.
-                        "on_player_tool_inventory_changed", --Called after a players tool inventory changed in some way.
-                        "on_player_unmuted", --Called when a player is unmuted.
-                        "on_player_used_capsule", --Called when a player uses a capsule that results in some game action.
-                        "on_pre_entity_settings_pasted", --Called before entity copy-paste is done.
-                        "on_pre_ghost_deconstructed", --Called before a ghost entity is destroyed as a result of being marked for deconstruction.
-                        "on_pre_player_crafted_item",
-                        "on_pre_player_died", --Called before a players dies.
-                        "on_pre_player_mined_item", --Called when the player finishes mining an entity, before the entity is removed from map.
-                        "on_pre_surface_deleted", --Called just before a surface is deleted.
-                        "on_put_item", --Called when players uses item to build something.
-                        "on_research_finished", --Called when a research finishes.
-                        "on_research_started", --Called when a technology research starts.
-                        "on_resource_depleted", --Called when a resource entity reaches 0 or its minimum yield for infinite resources.
-                        "on_robot_built_entity", --Called when a construction robot builds an entity.
-                        "on_robot_built_tile", --Called after a robot builds tiles.
-                        "on_robot_mined", --Called when a robot mines an entity.
-                        "on_robot_mined_entity", --Called after the results of an entity being mined are collected just before the entity is destroyed.
-                        "on_robot_mined_tile", --Called after a robot mines tiles.
-                        "on_robot_pre_mined", --Called before a robot mines an entity.
-                        "on_rocket_launched", --Called when the rocket is launched.
-                        "on_runtime_mod_setting_changed", --Called when a runtime mod setting is changed by a player.
-                        "on_sector_scanned", --Called when the radar finishes scanning a sector.
-                        "on_selected_entity_changed", --Called after the selected entity changes for a given player.
-                        "on_surface_created", --Called when a surface is created.
-                        "on_surface_deleted", --Called after a surface is deleted.
-                        "on_tick", --It is fired once every tick.
-                        "on_train_changed_state", --Called when a train changes state (started to stopped and vice versa)
-                        "on_train_created", --Called when a new train is created either through disconnecting/connecting an existing one or building a new one.
-                        "on_trigger_created_entity", --Called when an entity with a trigger prototype (such as capsules) create an entity AND that trigger prototype defined trigger_created_entity="true".
-                        "script_raised_built", --A static event ID mods can use to tell other mods they built something with a script.
-                        "script_raised_destroy", --A static event ID mods can use to tell other mods they destroyed something with a script.
-                        "script_raised_revive", --A static event ID mods can use to tell other mods they revived something with a script.
+                        "on_tick", "on_gui_click", "on_gui_text_changed", "on_gui_checked_state_changed", "on_entity_died", "on_entity_damaged", "on_picked_up_item",
+                        "on_built_entity", "on_sector_scanned", "on_player_mined_item", "on_put_item", "on_rocket_launched", "on_pre_player_mined_item", "on_chunk_generated",
+                        "on_player_crafted_item", "on_robot_built_entity", "on_robot_pre_mined", "on_robot_mined", "on_research_started", "on_research_finished",
+                        "on_player_rotated_entity", "on_marked_for_deconstruction", "on_canceled_deconstruction", "on_trigger_created_entity", "on_train_changed_state",
+                        "on_player_created", "on_resource_depleted", "on_player_driving_changed_state", "on_force_created", "on_forces_merging", "on_player_cursor_stack_changed",
+                        "on_pre_entity_settings_pasted", "on_entity_settings_pasted", "on_player_main_inventory_changed", "on_player_quickbar_inventory_changed",
+                        "on_player_tool_inventory_changed", "on_player_armor_inventory_changed", "on_player_ammo_inventory_changed", "on_player_gun_inventory_changed",
+                        "on_player_placed_equipment", "on_player_removed_equipment", "on_pre_player_died", "on_player_died", "on_player_respawned", "on_player_joined_game",
+                        "on_player_left_game", "on_player_built_tile", "on_player_mined_tile", "on_robot_built_tile", "on_robot_mined_tile", "on_player_selected_area",
+                        "on_player_alt_selected_area", "on_player_changed_surface", "on_selected_entity_changed", "on_market_item_purchased", "on_player_dropped_item",
+                        "on_biter_base_built", "on_player_changed_force", "on_entity_renamed", "on_gui_selection_state_changed", "on_runtime_mod_setting_changed",
+                        "on_difficulty_settings_changed", "on_surface_created", "on_surface_deleted", "on_pre_surface_deleted", "on_player_mined_entity", "on_robot_mined_entity",
+                        "on_train_created", "on_gui_elem_changed", "on_player_setup_blueprint", "on_player_deconstructed_area", "on_player_configured_blueprint", "on_console_chat",
+                        "on_console_command", "on_player_removed", "on_player_used_capsule", "script_raised_built", "script_raised_destroy", "script_raised_revive",
+                        "on_player_promoted", "on_player_demoted", "on_combat_robot_expired", "on_player_changed_position", "on_mod_item_opened", "on_gui_opened",
+                        "on_gui_closed", "on_gui_value_changed", "on_player_muted", "on_player_unmuted", "on_player_cheat_mode_enabled", "on_player_cheat_mode_disabled",
+                        "on_character_corpse_expired", "on_pre_ghost_deconstructed", "on_player_pipette", "on_player_display_resolution_changed", "on_player_display_scale_changed",
+                        "on_pre_player_crafted_item", "on_player_cancelled_crafting", "on_chunk_charted", "on_technology_effects_reset", "on_land_mine_armed", "on_forces_merged",
                     },
                 },
                 alert_type = {
