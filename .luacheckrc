@@ -42,7 +42,7 @@ files['.luacheckrc'] = {
 --[Set Defaults]--
 -------------------------------------------------------------------------------
 local LINE_LENGTH = false -- It is 2017 limits on length are a waste
-local IGNORE = {'21./%w+_$', '21./_%w+$', '213/[ijk]', '213/index'}
+local IGNORE = {'21./%w+_$', '21./_%w+$', '213/[ijk]', '213/index', '213/key'}
 local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'} -- These globals are not available to the factorio API
 
 local STD_CONTROL = 'lua52c+factorio+factorio_control+stdlib+factorio_defines'
@@ -66,15 +66,11 @@ exclude_files = {
     --Ignore special folders
     '**/.*/*', --Ignore if path starts with .
     '**/mod/stdlib/', --Ignore from symlinked
+
     --Ignore development mods
     '**/combat-tester/',
     '**/test-maker/',
-    '**/trailer/'
-
-    --Temporarily ignore these
-    --"**/scenarios/",
-    --"**/tutorials/",
-    --"**/campaigns/",
+    '**/trailer/',
 }
 
 -------------------------------------------------------------------------------
@@ -97,11 +93,14 @@ files['**/settings/'].std = STD_DATA
 
 local base_scenarios = {
     std = STD_BASE_CONTROL .. '+factorio_base_scenarios+factorio_base_story',
-    ignore = {'212/event'}
+    --Ignore these, Klonan is on his own!
+    --ignore = {'212/event', '111', '112', '113', '211', '212', '213', '311', '411', '412', '421', '422', '423', '431', '432', '512'}
+    ignore = {'...'}
 }
 files['**/base/scenarios/'] = base_scenarios
 files['**/base/tutorials/'] = base_scenarios
 files['**/base/campaigns/'] = base_scenarios
+files['**/wip-scenario/'] = base_scenarios
 
 files['**/base/migrations/'] = {std = STD_BASE_CONTROL}
 
@@ -109,15 +108,19 @@ files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
 files['**/core/lualib/util.lua'] = {globals = {'util', 'table'}, ignore = {'432/object'}}
 files['**/core/lualib/silo-script.lua'] = {globals = {'silo_script'}, ignore = {'4../player'}}
 files['**/core/lualib/production-score.lua'] = {globals = {'production_score', 'get_price_recursive'}, ignore = {'4../player'}}
-files['**/core/lualib/story.lua'] = {std = '+factorio_base_story', ignore = {'42./k', '42./filter'}}
+files['**/core/lualib/story*'] = {std = '+factorio_base_story', ignore = {'42./k', '42./filter'}}
 files['**/core/lualib/mod-gui.lua'] = {globals = {'mod_gui'}}
-files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
 files['**/core/lualib/camera.lua'] = {globals = {'camera'}}
 files['**/core/lualib/builder.lua'] = {globals = {'Builder', 'builder', 'action', 'down', 'right'}}
 
 files['**/core/lualib/bonus-gui-ordering/'] = {std = STD_BASE_DATA}
+files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
+files['**/core/lualib/circuit-connector-*'] = {std = STD_BASE_DATA..'+factorio_circuit_connector_generated'}
+files['**/core/lualib/bonus-gui-ordering.lua'] = {globals = {'bonus_gui_ordering'}}
+
 files['**/base/prototypes/'] = {std = STD_BASE_DATA}
 files['**/core/prototypes/'] = {std = STD_BASE_DATA}
+files['**/core/prototypes/noise-programs.lua'] = {ignore = {'212/x', '212/y', '212/tile', '212/map'}}
 
 -------------------------------------------------------------------------------
 --[Set STDLIB project modules]--
@@ -394,6 +397,9 @@ stds.factorio_data = {
     }
 }
 
+-------------------------------------------------------------------------------
+--[Factorio Data]--------------------------------------------------------------
+-------------------------------------------------------------------------------
 stds.factorio_base_control = {
     read_globals = {"silo_script", "mod_gui", "camera"}
 }
@@ -448,8 +454,12 @@ stds.factorio_base_scenarios = {
         "setup", "story_gui_click", "clear_surface", "add_run_trains_button", "puzzle_condition", "basic_signals",
         "loop_trains", "Y_offset", "ghosts_1", "ghosts_2", "required_path", "through_wall_path", "count", "check_built_real_rail",
         "current_ghosts_count", "other", "rails", "set_rails", "straight_section", "late_entities", "entities", "stop",
+        "get_spawn_coordinate",
 
-        --"clear_rails", "create_entities_on_tick",
+        --tutorials
+        "intermission", "create_entities_on_tick", "on_player_created", "required_count", "non_player_entities", "clear_rails",
+        "chest", "damage", "furnace", "init_prototypes", "build_infi_table", "junk", "update_player_tags", "time_left", "team_production",
+        "create_task_frame", "create_visibilty_buttons", "update_leaderboard", "in_in_area"
     }
 }
 
@@ -459,8 +469,7 @@ stds.factorio_base_data = {
         "make_cursor_box", "make_full_cursor_box",
         "default_container_padding", "default_orange_color", "default_light_orange_color", "warning_red_color",
         "achievement_green_color", "achievement_tan_color", "orangebuttongraphcialset", "bluebuttongraphcialset",
-
-        "bonus_gui_ordering", "trivial_smoke",
+        "bonus_gui_ordering", "trivial_smoke", "technology_slot_base_width", "technology_slot_base_height", "default_frame_font_vertical_compensation",
 
         --Belts
         "transport_belt_connector_frame_sprites", "transport_belt_circuit_wire_connection_point", "transport_belt_circuit_wire_max_distance",
@@ -472,12 +481,10 @@ stds.factorio_base_data = {
         "express_belt_starting_bottom", "express_belt_starting_side",
 
         --Circuit Connectors
-        --"get_circuit_connector_sprites", "get_circuit_connector_wire_shifting_for_connector",
         "circuit_connector_definitions", "default_circuit_wire_max_distance", "inserter_circuit_wire_max_distance",
         "universal_connector_template", "belt_connector_template", "belt_frame_connector_template", "inserter_connector_template",
 
         --Inserter Circuit Connectors
-        --"inserter_circuit_connector_sprites", "inserter_circuit_wire_connection_point",
         "inserter_circuit_wire_max_distance", "inserter_default_stack_control_input_signal",
 
         --Sounds/beams
@@ -497,7 +504,7 @@ stds.factorio_base_data = {
         "destroyed_rail_pictures", "rail_pictures", "rail_pictures_internal", "standard_train_wheels", "drive_over_tie",
         "rolling_stock_back_light", "rolling_stock_stand_by_light",
 
-        --Bugs
+        --Enemies
         "make_enemy_autoplace", "make_enemy_spawner_autoplace", "make_enemy_worm_autoplace",
         "make_spitter_attack_animation", "make_spitter_run_animation", "make_spitter_dying_animation",
         "make_spitter_attack_parameters", "make_spitter_roars", "make_spitter_dying_sounds",
@@ -509,10 +516,13 @@ stds.factorio_base_data = {
 
         --Other
         "tile_variations_template", "make_water_autoplace_settings",
-        "make_unit_melee_ammo_type",  "make_trivial_smoke", "make_4way_animation_from_spritesheet", "make_flying_robot_sounds",
-        "productivitymodulelimitation", "crash_trigger", "capsule_smoke", "make_beam",
+        "make_unit_melee_ammo_type",  "make_trivial_smoke", "make_4way_animation_from_spritesheet", "flying_robot_sounds",
+        "productivitymodulelimitation", "crash_trigger", "capsule_smoke", "make_beam", "playeranimations",
+        "make_blood_tint", "make_shadow_tint",
 
-        "playeranimations",
+        --tiles
+        "water_transition_template", "make_water_transition_template", "water_autoplace_settings", "water_tile_type_names",
+        "patch_for_inner_corner_of_transition_between_transition",
     }
 }
 
@@ -527,10 +537,22 @@ stds.factorio_base_story = {
         "message_log_table", "toggle_message_log_button", "toggle_objective_button", "message_log_init",
         "add_gui_recursive", "add_toggle_message_log_button", "add_toggle_objective_button", "mod_gui",
         "flash_message_log_button", "flash_message_log_on_tick", "story_gui_click", "story_points_by_name", "story_branches",
-        "player", "surface", "deconstruct_on_tick", "recreate_entities_on_tick", "flying_congrats"
+        "player", "surface", "deconstruct_on_tick", "recreate_entities_on_tick", "flying_congrats", "story_table"
     }
 }
 
+stds.factorio_circuit_connector_generated = {
+    globals = {
+        'default_circuit_wire_max_distance', 'circuit_connector_definitions', 'universal_connector_template',
+        'belt_connector_template', 'belt_frame_connector_template', 'inserter_connector_template', 'inserter_connector_template',
+        'inserter_circuit_wire_max_distance', 'inserter_default_stack_control_input_signal', 'transport_belt_connector_frame_sprites',
+        'transport_belt_circuit_wire_max_distance',
+    }
+}
+
+-------------------------------------------------------------------------------
+--[STDLIB]---------------------------------------------------------------------
+-------------------------------------------------------------------------------
 stds.stdlib = {
     read_globals = {
         table = {
@@ -569,6 +591,9 @@ stds.stdlib_data = {
     }
 }
 
+-------------------------------------------------------------------------------
+--[Factorio Defines]-----------------------------------------------------------
+-------------------------------------------------------------------------------
 stds.factorio_defines = {
     globals = {"creative_mode_defines"},
     read_globals = {
