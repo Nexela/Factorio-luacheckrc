@@ -550,35 +550,38 @@ stds.factorio_circuit_connector_generated = {
     }
 }
 
--------------------------------------------------------------------------------
---[STDLIB]---------------------------------------------------------------------
--------------------------------------------------------------------------------
+--(( STDLIB ))--
 stds.stdlib = {
     read_globals = {
         table = {
             fields = {
-                "map", "filter", "find", "any", "each", "flatten", "first", "last",
-                "min", "max", "sum", "avg", "merge", "deepcopy", "flexcopy", "values", "keys",
-                "remove_keys", "invert", "count_keys", "size", "array_to_dictionary", "clear", "is_empty"
+                "map", "avg", "count_keys", "sum", "max", "remove", "insert", "invert", "first", "sort", "compare", "maxn", "any", "array_to_dictionary",
+                "each", "flatten", "keys", "filter", "remove_keys", "flexcopy", "find", "fullcopy", "values", "pack", "deepcopy", "concat", "clear", "min",
+                "is_empty", "merge", "size", "dictionary_merge", "unpack", "last"
             },
         },
         string = {
             fields = {
-                "dictionary_merge", "each", "array_to_dictionary", "count_keys", "min", "filter", "remove_keys", "map", "find", "clear", "deepcopy", "any",
-                "avg", "flatten", "is_empty", "size", "max", "invert", "keys", "first", "values", "sum", "last", "merge"
+                "is_space", "is_empty", "match", "title", "upper", "gmatch", "trim", "split", "len", "ordinal_suffix", "dump", "shorten", "reverse",
+                "ends_with", "byte", "starts_with", "join", "is_alpha", "lower", "is_upper", "is_digit", "is_alnum", "rjust", "center", "ljust", "format",
+                "char", "is_lower", "contains", "gsub", "find", "rep", "sub"
             },
         },
         math = {
             fields = {
-                "avg", "arithmetic_mean", "floor_to", "quadratic_mean", "sum", "generalized_mean", "round", "geometric_mean", "energetic_mean",
-                "midrange_mean", "weighted_mean", "round_to", "harmonic_mean"
+                "asin", "max", "modf", "midrange_mean", "pow", "ldexp", "maxuint16", "fmod", "round_to", "randomseed", "huge", "harmonic_mean", "tan",
+                "maxint32", "quadratic_mean", "pi", "energetic_mean", "minint8", "frexp", "generalized_mean", "rad", "sin", "sinh", "min", "geometric_mean",
+                "atan", "avg", "cosh", "maxint8", "arithmetic_mean", "exp", "sum", "round", "maxuint64", "minint64", "ceil", "maxint64", "atan2", "floor_to",
+                "floor", "log", "maxint16", "minint16", "tanh", "acos", "deg", "cos", "log10", "maxuint8", "abs", "weighted_mean", "random", "maxuint32",
+                "sqrt", "minint32"
             }
         },
     },
     globals = {
-        "prequire", "rawtostring",
-         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
-            "EVENT", "GUI", "PLAYER", "FORCE",
+        "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if",
+        "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
+        "EVENT", "GUI", "PLAYER", "FORCE",
+        "_STDLIB_NO_DEFINES_COLOR", "_STDLIB_NO_DEFINES_TIME", "_STDLIB_NO_STRING", "_STDLIB_NO_TABLE", "_STDLIB_NO_MATH"
     }
 }
 
@@ -589,11 +592,9 @@ stds.stdlib_data = {
     globals = {
         'DATA', 'RECIPE', 'ITEM', 'FLUID', 'ENTITY', 'TECHNOLOGY', 'CATEGORY'
     }
-}
+} --))
 
--------------------------------------------------------------------------------
---[Factorio Defines]-----------------------------------------------------------
--------------------------------------------------------------------------------
+--(( FACTORIO DEFINES ))--
 stds.factorio_defines = {
     globals = {"creative_mode_defines"},
     read_globals = {
@@ -933,7 +934,7 @@ stds.factorio_defines = {
             },
         }
     }
-}
+} --))
 
 -- Warnings list
 -- 011 A syntax error.
