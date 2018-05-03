@@ -212,7 +212,7 @@ stds.factorio_control = {
         script = {
             fields = {
                 "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
-                "raise_event", "get_event_handler", "mod_name",
+                "raise_event", "get_event_handler", "mod_name", "get_event_order"
             },
         },
 
@@ -620,6 +620,7 @@ stds.factorio_defines = {
                         "on_gui_closed", "on_gui_value_changed", "on_player_muted", "on_player_unmuted", "on_player_cheat_mode_enabled", "on_player_cheat_mode_disabled",
                         "on_character_corpse_expired", "on_pre_ghost_deconstructed", "on_player_pipette", "on_player_display_resolution_changed", "on_player_display_scale_changed",
                         "on_pre_player_crafted_item", "on_player_cancelled_crafting", "on_chunk_charted", "on_technology_effects_reset", "on_land_mine_armed", "on_forces_merged",
+                        "on_player_trash_inventory_changed",
                     },
                 },
                 alert_type = {
@@ -836,7 +837,7 @@ stds.factorio_defines = {
                         "furnace_result", "furnace_source", "god_main", "god_quickbar", "item_main", "lab_input", "lab_modules",
                         "mining_drill_modules", "player_ammo", "player_armor", "player_guns", "player_main", "player_quickbar",
                         "player_tools", "player_trash", "player_vehicle", "roboport_material", "roboport_robot", "rocket_silo_result",
-                        "rocket_silo_rocket", "turret_ammo",
+                        "rocket_silo_rocket", "turret_ammo", "rocket", "character_corpse"
                     },
                 },
                 logistic_member_index = {
