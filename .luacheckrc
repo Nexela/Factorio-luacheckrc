@@ -34,7 +34,7 @@
 -- Set up the the standards for this file.
 files['.luacheckrc'] = {
     std = 'lua52c',
-    globals = {'files', 'exclude_files', 'not_globals', 'stds', 'std', 'max_line_length', 'ignore'},
+    globals = {'files', 'exclude_files', 'not_globals', 'stds', 'std', 'max_line_length', 'ignore', 'quiet', "max_cyclomatic_complexity", "codes"},
     max_line_length = false --turn of line length warnings for this file
 }
 
@@ -60,12 +60,16 @@ max_line_length = LINE_LENGTH
 
 not_globals = NOT_GLOBALS
 ignore = IGNORE
+quiet = 1 -- pass -q option
+max_cyclomatic_complexity = 75
+codes = true
 
 --List of files and directories to exclude
 exclude_files = {
     --Ignore special folders
     '**/.*/*', --Ignore if path starts with .
     '**/mod/stdlib/', --Ignore from symlinked
+    '**/vendor/',
 
     --Ignore development mods
     '**/combat-tester/',
@@ -936,6 +940,14 @@ stds.factorio_defines = {
         }
     }
 } --))
+
+--[[
+    "ignore", "std", "globals", "unused_args", "self", "compat", "global", "unused", "redefined",
+    "unused_secondaries", "allow_defined", "allow_defined_top", "module",
+    "read_globals", "new_globals", "new_read_globals", "enable", "only", "not_globals",
+    "max_line_length", "max_code_line_length", "max_string_line_length", "max_comment_line_length",
+    "max_cyclomatic_complexity"
+--]]
 
 -- Warnings list
 -- 011 A syntax error.
