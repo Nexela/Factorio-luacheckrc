@@ -68,8 +68,7 @@ codes = true
 exclude_files = {
     --Ignore special folders
     '**/.*/*', --Ignore if path starts with .
-    '**/mod/stdlib/', --Ignore from symlinked
-    '**/vendor/',
+    '**/stdlib/vendor/',
 
     --Ignore development mods
     '**/combat-tester/',
@@ -97,7 +96,6 @@ files['**/settings/'].std = STD_DATA
 
 local base_scenarios = {
     std = STD_BASE_CONTROL .. '+factorio_base_scenarios+factorio_base_story',
-    --Ignore these, Klonan is on his own!
     --ignore = {'212/event', '111', '112', '113', '211', '212', '213', '311', '411', '412', '421', '422', '423', '431', '432', '512'}
     ignore = {'...'}
 }
@@ -142,15 +140,11 @@ local stdlib_data = {
 -- Assume control stage for stdlib
 files['**/stdlib/'] = stdlib_control
 
-files['**/stdlib/utils/math.lua'].std = 'lua52c'
-files['**/stdlib/utils/string.lua'].std = 'lua52c'
-files['**/stdlib/utils/table.lua'].std = 'lua52c'
-files['**/stdlib/utils/iterator.lua'].std = 'lua52c'
-files['**/stdlib/utils/is.lua'].std = 'lua52c'
+-- Assume generic content for stdlib utils
+files['**/stdlib/utils/**'].std = 'lua52c+stdlib'
 
 -- STDLIB data files
 files['**/stdlib/data/'] = stdlib_data
-files['**/creative'].ignore = {'...'}
 
 -- STDLIB Busted Spec
 files['**/spec/**'] = {
@@ -585,7 +579,7 @@ stds.stdlib = {
         "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if",
         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
         "EVENT", "GUI", "PLAYER", "FORCE",
-        "_STDLIB_NO_DEFINES_COLOR", "_STDLIB_NO_DEFINES_TIME", "_STDLIB_NO_STRING", "_STDLIB_NO_TABLE", "_STDLIB_NO_MATH"
+        "STDLIB"
     }
 }
 
@@ -910,18 +904,7 @@ stds.factorio_defines = {
                         "copper", "green", "red",
                     }
                 },
-                -- Deprecated
-                colors = {
-                    other_fields = true,
-                },
-                -- Deprecated
-                anticolors = {
-                    other_fields = true,
-                },
-                -- Deprecated
-                lightcolors = {
-                    other_fields = true,
-                },
+                -- Defines additional modules
                 color = {
                     other_fields = true,
                 },
