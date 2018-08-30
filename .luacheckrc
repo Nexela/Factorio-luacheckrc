@@ -29,7 +29,7 @@
 -- ]]
 
 -------------------------------------------------------------------------------
---[.luacheckrc]-- Current Factorio Version .16
+--[.luacheckrc]-- Current Factorio Version .17
 -------------------------------------------------------------------------------
 -- Set up the the standards for this file.
 files['.luacheckrc'] = {
