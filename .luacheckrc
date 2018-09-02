@@ -124,9 +124,7 @@ files['**/base/prototypes/'] = {std = STD_BASE_DATA}
 files['**/core/prototypes/'] = {std = STD_BASE_DATA}
 files['**/core/prototypes/noise-programs.lua'] = {ignore = {'212/x', '212/y', '212/tile', '212/map'}}
 
--------------------------------------------------------------------------------
---[Set STDLIB project modules]--
--------------------------------------------------------------------------------
+--(( stdlib ))--
 local stdlib_control = {
     std = 'lua52c+factorio+factorio_control+stdlib+factorio_defines',
     max_line_length = LINE_LENGTH
@@ -150,12 +148,9 @@ files['**/stdlib/data/'] = stdlib_data
 files['**/spec/**'] = {
     globals = {'serpent', 'log', 'SLOG', 'RESET'},
     std = 'lua52c+busted+factorio_defines+factorio_control+stdlib'
-}
+} --))
 
-
--------------------------------------------------------------------------------
---[STDS FACTORIO]--
--------------------------------------------------------------------------------
+--(( Factorio ))--
 stds.factorio = {
     --Set the read only variables
     read_globals = {
@@ -172,16 +167,16 @@ stds.factorio = {
                 "add_shift",
                 table = {
                     fields = {
-                        "compare", "deepcopy"
+                        "compare", "deepcopy", "merge"
                     },
                 },
             },
         },
-        table = {
-            fields = {
-                "compare", "deepcopy"
-            },
-        },
+        -- table = {
+        --     fields = {
+        --         "compare", "deepcopy"
+        --     },
+        -- },
     },
 }
 
@@ -191,7 +186,7 @@ stds.factorio_control = {
         -- @commands@:
         commands = {
             fields = {
-                "add_command", "commands", "game_commands",
+                "add_command", "commands", "game_commands", "remove_command"
             },
         },
 
@@ -212,140 +207,112 @@ stds.factorio_control = {
                 "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
                 "raise_event", "get_event_handler", "mod_name", "get_event_order"
             },
+            other_fields = false,
         },
 
         -- @remote@: Allows inter-mod communication by providing a repository of interfaces that is shared by all mods.
         -- (http://lua-api.factorio.com/latest/LuaRemote.html)
         remote = {
             fields = {
-                "add_interface", "remove_interface", "call", "interfaces"
+                interfaces = {read_only = false, other_fields = true},
+                "add_interface", "remove_interface", "call"
             },
+            read_only = true,
+            other_fields = false,
+        },
+
+        rcon = {
+            fields = {'print'}
         },
 
         -- @game@: Main object through which most of the API is accessed.
         -- It is, however, not available inside handlers registered with @script.on_load@.
         -- (http://lua-api.factorio.com/latest/LuaGameScript.html)
         game ={
-            other_fields = true,
+            other_fields = false,
             read_only = false,
             fields = {
-                "set_game_state", "get_entity_by_tag", "show_message_dialog", "disable_tips_and_tricks", "is_demo", "reload_script",
-                "save_atlas", "check_consistency", "regenerate_entity", "take_screenshot", "write_file", "remove_path",
-                "remove_offline_players", "force_crc", "merge_forces", "player", "server_save", "delete_surface", "disable_replay",
-                "direction_to_string", "print", "tick", "finished", "difficulty",
-                speed = {
-                    --rw
-                    read_only = false,
-                },
-                player = {
-                    --luaPlayer
-                    --The player typing at the console, nil in all other cases
-                    read_only = false,
-                    other_fields = true,
-                },
-                players = {
-                    --array of luaPlayer
-                    read_only = false,
-                    other_fields = true,
-                },
-                connected_players = {
-                    --array of luaPlayer
-                    read_only = false,
-                    other_fields = true,
-                },
-                surfaces = {
-                    --array of luaSurface
-                    read_only = false,
-                    other_fields = true,
-                },
-                create_surface = {
-                    --luaSurface
-                    read_only = false,
-                    other_fields = true,
-                },
-                forces = {
-                    --array of luaForce
-                    read_only = false,
-                    other_fields = true,
-                },
-                create_force = {
-                    --luaForce
-                    read_only = false,
-                    other_fields = true,
-                },
-                entity_prototypes = {
-                    --string dictionary - > luaEntityPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                item_prototypes = {
-                    --string dictionary - > luaItemPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                fluid_prototypes = {
-                    --string dictionary - > luaFluidPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                tile_prototypes = {
-                    --string dictionary - > luaTilePrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                equipment_prototypes = {
-                    --string dictionary - > luaEquipmentPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                recipe_prototypes = {
-                    --string dictionary - > luaRecipePrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                technology_prototypes = {
-                    --string dictionary - > luaTechnologyPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                damage_prototypes = {
-                    --string dictionary - > luaDamagePrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                virtual_signal_prototypes = {
-                    --string dictionary - > luaVirtualSignalPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                equipment_grid_prototypes = {
-                    --string dictionary - > luaEquipmentGridPrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                decorative_prototypes = {
-                    --string dictionary -> LuaDecorativePrototype
-                    read_only = true,
-                    other_fields = true
-                },
-                map_settings = {
-                    --custom -> mapsettings
-                    read_only = false,
-                    other_fields = true
-                },
-                active_mods = {
-                    --string dictionary -> string version
-                    read_only = true,
-                    other_fields = true
-                },
-                permissions = {
-                    read_only = true,
-                    other_fields = true
-                },
-                backer_names = {
-                    read_only = true,
-                    other_fields = true
-                }
+                "auto_save",
+                "ban_player",
+                "check_consistency",
+                "check_prototype_translations",
+                "count_pipe_groups",
+                "create_force",
+                "create_random_generator",
+                "create_surface",
+                "delete_surface",
+                "desync_players",
+                "direction_to_string",
+                "disable_replay",
+                "disable_tips_and_tricks",
+                "force_crc",
+                "get_active_entities_count",
+                "get_entity_by_tag",
+                "get_map_exchange_string",
+                "help",
+                "is_demo",
+                "is_multiplayer",
+                "is_valid_sound_path",
+                "json_to_table",
+                "kick_player",
+                "merge_forces",
+                "mute_player",
+                "play_sound",
+                "print",
+                "print_stack_size",
+                "purge_player",
+                "regenerate_entity",
+                "reload_mods",
+                "reload_script",
+                "remove_offline_players",
+                "remove_path",
+                "save_atlas",
+                "server_save",
+                "set_game_state",
+                "show_message_dialog",
+                "table_to_json",
+                "take_screenshot",
+                "take_technology_screenshot",
+                "unban_player",
+                "unmute_player",
+                "write_file",
+
+                active_mods = {read_only = true, other_fields = true},
+                ammo_category_prototypes = {read_only = true, other_fields = true},
+                autoplace_control_prototypes = {read_only = true, other_fields = true},
+                backer_names = {read_only = true, other_fields = true},
+                connected_players = {read_only = true, other_fields = true},
+                custom_input_prototypes = {read_only = true, other_fields = true},
+                damage_prototypes = {read_only = true, other_fields = true},
+                decorative_prototypes = {read_only = true, other_fields = true},
+                default_map_gen_settings = {read_only = true, other_fields = true},
+                difficulty = {read_only = true, other_fields = true},
+                difficulty_settings = {read_only = true, other_fields = true},
+                enemy_has_vision_on_land_mines = {read_only = false, other_fields = false},
+                entity_prototypes = {read_only = true, other_fields = true},
+                equipment_grid_prototypes = {read_only = true, other_fields = true},
+                equipment_prototypes = {read_only = true, other_fields = true},
+                finished = {read_only = true, other_fields = true},
+                fluid_prototypes = {read_only = true, other_fields = true},
+                forces = {read_only = true, other_fields = true},
+                item_prototypes = {read_only = true, other_fields = true},
+                map_settings = {read_only = true, other_fields = true},
+                mod_setting_prototypes = {read_only = true, other_fields = true},
+                noise_layer_prototypes = {read_only = true, other_fields = true},
+                permissions = {read_only = true, other_fields = true},
+                player = {read_only = true, other_fields = true},
+                players = {read_only = true, other_fields = true},
+                recipe_prototypes = {read_only = true, other_fields = true},
+                speed = {read_only = false, other_fields = false},
+                styles = {read_only = true, other_fields = true},
+                surfaces = {read_only = true, other_fields = true},
+                technology_prototypes = {read_only = true, other_fields = true},
+                tick = {read_only = true, other_fields = true},
+                tick_paused = {read_only = false, other_fields = false},
+                ticks_played = {read_only = true, other_fields = true},
+                ticks_to_run = {read_only = false, other_fields = false},
+                tile_prototypes = {read_only = true, other_fields = true},
+                virtual_signal_prototypes = {read_only = true, other_fields = true}
             },
         },
     },
@@ -393,11 +360,9 @@ stds.factorio_data = {
             other_fields = true
         }
     }
-}
+} --))
 
--------------------------------------------------------------------------------
---[Factorio Data]--------------------------------------------------------------
--------------------------------------------------------------------------------
+--(( Factorio Globals are bad mkay ))--
 stds.factorio_base_control = {
     read_globals = {"silo_script", "mod_gui", "camera"}
 }
@@ -546,34 +511,34 @@ stds.factorio_circuit_connector_generated = {
         'inserter_circuit_wire_max_distance', 'inserter_default_stack_control_input_signal', 'transport_belt_connector_frame_sprites',
         'transport_belt_circuit_wire_max_distance',
     }
-}
+} --))
 
 --(( STDLIB ))--
 stds.stdlib = {
     read_globals = {
-        table = {
-            fields = {
-                "map", "avg", "count_keys", "sum", "max", "remove", "insert", "invert", "first", "sort", "compare", "maxn", "any", "array_to_dictionary",
-                "each", "flatten", "keys", "filter", "remove_keys", "flexcopy", "find", "fullcopy", "values", "pack", "deepcopy", "concat", "clear", "min",
-                "is_empty", "merge", "size", "dictionary_merge", "unpack", "last"
-            },
-        },
-        string = {
-            fields = {
-                "is_space", "is_empty", "match", "title", "upper", "gmatch", "trim", "split", "len", "ordinal_suffix", "dump", "shorten", "reverse",
-                "ends_with", "byte", "starts_with", "join", "is_alpha", "lower", "is_upper", "is_digit", "is_alnum", "rjust", "center", "ljust", "format",
-                "char", "is_lower", "contains", "gsub", "find", "rep", "sub"
-            },
-        },
-        math = {
-            fields = {
-                "asin", "max", "modf", "midrange_mean", "pow", "ldexp", "maxuint16", "fmod", "round_to", "randomseed", "huge", "harmonic_mean", "tan",
-                "maxint32", "quadratic_mean", "pi", "energetic_mean", "minint8", "frexp", "generalized_mean", "rad", "sin", "sinh", "min", "geometric_mean",
-                "atan", "avg", "cosh", "maxint8", "arithmetic_mean", "exp", "sum", "round", "maxuint64", "minint64", "ceil", "maxint64", "atan2", "floor_to",
-                "floor", "log", "maxint16", "minint16", "tanh", "acos", "deg", "cos", "log10", "maxuint8", "abs", "weighted_mean", "random", "maxuint32",
-                "sqrt", "minint32"
-            }
-        },
+        -- table = {
+        --     fields = {
+        --         "map", "avg", "count_keys", "sum", "max", "remove", "insert", "invert", "first", "sort", "compare", "maxn", "any", "array_to_dictionary",
+        --         "each", "flatten", "keys", "filter", "remove_keys", "flexcopy", "find", "fullcopy", "values", "pack", "deepcopy", "concat", "clear", "min",
+        --         "is_empty", "merge", "size", "dictionary_merge", "unpack", "last"
+        --     },
+        -- },
+        -- string = {
+        --     fields = {
+        --         "is_space", "is_empty", "match", "title", "upper", "gmatch", "trim", "split", "len", "ordinal_suffix", "dump", "shorten", "reverse",
+        --         "ends_with", "byte", "starts_with", "join", "is_alpha", "lower", "is_upper", "is_digit", "is_alnum", "rjust", "center", "ljust", "format",
+        --         "char", "is_lower", "contains", "gsub", "find", "rep", "sub"
+        --     },
+        -- },
+        -- math = {
+        --     fields = {
+        --         "asin", "max", "modf", "midrange_mean", "pow", "ldexp", "maxuint16", "fmod", "round_to", "randomseed", "huge", "harmonic_mean", "tan",
+        --         "maxint32", "quadratic_mean", "pi", "energetic_mean", "minint8", "frexp", "generalized_mean", "rad", "sin", "sinh", "min", "geometric_mean",
+        --         "atan", "avg", "cosh", "maxint8", "arithmetic_mean", "exp", "sum", "round", "maxuint64", "minint64", "ceil", "maxint64", "atan2", "floor_to",
+        --         "floor", "log", "maxint16", "minint16", "tanh", "acos", "deg", "cos", "log10", "maxuint8", "abs", "weighted_mean", "random", "maxuint32",
+        --         "sqrt", "minint32"
+        --     }
+        -- },
     },
     globals = {
         "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if",
@@ -594,32 +559,137 @@ stds.stdlib_data = {
 
 --(( FACTORIO DEFINES ))--
 stds.factorio_defines = {
-    globals = {"creative_mode_defines"},
     read_globals = {
         defines = {
             fields = {
                 events = {
                     fields = {
-                        "on_tick", "on_gui_click", "on_gui_text_changed", "on_gui_checked_state_changed", "on_entity_died", "on_entity_damaged", "on_picked_up_item",
-                        "on_built_entity", "on_sector_scanned", "on_player_mined_item", "on_put_item", "on_rocket_launched", "on_pre_player_mined_item", "on_chunk_generated",
-                        "on_player_crafted_item", "on_robot_built_entity", "on_robot_pre_mined", "on_robot_mined", "on_research_started", "on_research_finished",
-                        "on_player_rotated_entity", "on_marked_for_deconstruction", "on_canceled_deconstruction", "on_trigger_created_entity", "on_train_changed_state",
-                        "on_player_created", "on_resource_depleted", "on_player_driving_changed_state", "on_force_created", "on_forces_merging", "on_player_cursor_stack_changed",
-                        "on_pre_entity_settings_pasted", "on_entity_settings_pasted", "on_player_main_inventory_changed", "on_player_quickbar_inventory_changed",
-                        "on_player_tool_inventory_changed", "on_player_armor_inventory_changed", "on_player_ammo_inventory_changed", "on_player_gun_inventory_changed",
-                        "on_player_placed_equipment", "on_player_removed_equipment", "on_pre_player_died", "on_player_died", "on_player_respawned", "on_player_joined_game",
-                        "on_player_left_game", "on_player_built_tile", "on_player_mined_tile", "on_robot_built_tile", "on_robot_mined_tile", "on_player_selected_area",
-                        "on_player_alt_selected_area", "on_player_changed_surface", "on_selected_entity_changed", "on_market_item_purchased", "on_player_dropped_item",
-                        "on_biter_base_built", "on_player_changed_force", "on_entity_renamed", "on_gui_selection_state_changed", "on_runtime_mod_setting_changed",
-                        "on_difficulty_settings_changed", "on_surface_created", "on_surface_deleted", "on_pre_surface_deleted", "on_player_mined_entity", "on_robot_mined_entity",
-                        "on_train_created", "on_gui_elem_changed", "on_player_setup_blueprint", "on_player_deconstructed_area", "on_player_configured_blueprint", "on_console_chat",
-                        "on_console_command", "on_player_removed", "on_player_used_capsule", "script_raised_built", "script_raised_destroy", "script_raised_revive",
-                        "on_player_promoted", "on_player_demoted", "on_combat_robot_expired", "on_player_changed_position", "on_mod_item_opened", "on_gui_opened",
-                        "on_gui_closed", "on_gui_value_changed", "on_player_muted", "on_player_unmuted", "on_player_cheat_mode_enabled", "on_player_cheat_mode_disabled",
-                        "on_character_corpse_expired", "on_pre_ghost_deconstructed", "on_player_pipette", "on_player_display_resolution_changed", "on_player_display_scale_changed",
-                        "on_pre_player_crafted_item", "on_player_cancelled_crafting", "on_chunk_charted", "on_technology_effects_reset", "on_land_mine_armed", "on_forces_merged",
+                        "on_ai_command_completed",
+                        "on_area_cloned",
+                        "on_biter_base_built",
+                        "on_built_entity",
+                        "on_canceled_deconstruction",
+                        "on_cancelled_upgrade",
+                        "on_character_corpse_expired",
+                        "on_chunk_charted",
+                        "on_chunk_deleted",
+                        "on_chunk_generated",
+                        "on_combat_robot_expired",
+                        "on_console_chat",
+                        "on_console_command",
+                        "on_difficulty_settings_changed",
+                        "on_entity_cloned",
+                        "on_entity_damaged",
+                        "on_entity_died",
+                        "on_entity_renamed",
+                        "on_entity_settings_pasted",
+                        "on_force_created",
+                        "on_forces_merged",
+                        "on_forces_merging",
+                        "on_game_created_from_scenario",
+                        "on_gui_checked_state_changed",
+                        "on_gui_click",
+                        "on_gui_closed",
+                        "on_gui_elem_changed",
+                        "on_gui_opened",
+                        "on_gui_selection_state_changed",
+                        "on_gui_text_changed",
+                        "on_gui_value_changed",
+                        "on_land_mine_armed",
+                        "on_marked_for_deconstruction",
+                        "on_marked_for_upgrade",
+                        "on_market_item_purchased",
+                        "on_mod_item_opened",
+                        "on_picked_up_item",
+                        "on_player_alt_selected_area",
+                        "on_player_ammo_inventory_changed",
+                        "on_player_armor_inventory_changed",
+                        "on_player_banned",
+                        "on_player_built_tile",
+                        "on_player_cancelled_crafting",
+                        "on_player_changed_force",
+                        "on_player_changed_position",
+                        "on_player_changed_surface",
+                        "on_player_cheat_mode_disabled",
+                        "on_player_cheat_mode_enabled",
+                        "on_player_configured_blueprint",
+                        "on_player_crafted_item",
+                        "on_player_created",
+                        "on_player_cursor_stack_changed",
+                        "on_player_deconstructed_area",
+                        "on_player_demoted",
+                        "on_player_died",
+                        "on_player_display_resolution_changed",
+                        "on_player_display_scale_changed",
+                        "on_player_driving_changed_state",
+                        "on_player_dropped_item",
+                        "on_player_fast_transferred",
+                        "on_player_gun_inventory_changed",
+                        "on_player_joined_game",
+                        "on_player_kicked",
+                        "on_player_left_game",
+                        "on_player_main_inventory_changed",
+                        "on_player_mined_entity",
+                        "on_player_mined_item",
+                        "on_player_mined_tile",
+                        "on_player_muted",
+                        "on_player_pipette",
+                        "on_player_placed_equipment",
+                        "on_player_promoted",
+                        "on_player_quickbar_inventory_changed",
+                        "on_player_removed",
+                        "on_player_removed_equipment",
+                        "on_player_repaired_entity",
+                        "on_player_respawned",
+                        "on_player_rotated_entity",
+                        "on_player_selected_area",
+                        "on_player_setup_blueprint",
+                        "on_player_toggled_alt_mode",
+                        "on_player_toggled_map_editor",
+                        "on_player_tool_inventory_changed",
                         "on_player_trash_inventory_changed",
-                    },
+                        "on_player_unbanned",
+                        "on_player_unmuted",
+                        "on_player_used_capsule",
+                        "on_pre_entity_settings_pasted",
+                        "on_pre_ghost_deconstructed",
+                        "on_pre_player_crafted_item",
+                        "on_pre_player_died",
+                        "on_pre_player_left_game",
+                        "on_pre_player_mined_item",
+                        "on_pre_surface_cleared",
+                        "on_pre_surface_deleted",
+                        "on_put_item",
+                        "on_research_finished",
+                        "on_research_started",
+                        "on_resource_depleted",
+                        "on_robot_built_entity",
+                        "on_robot_built_tile",
+                        "on_robot_mined",
+                        "on_robot_mined_entity",
+                        "on_robot_mined_tile",
+                        "on_robot_pre_mined",
+                        "on_rocket_launch_ordered",
+                        "on_rocket_launched",
+                        "on_runtime_mod_setting_changed",
+                        "on_script_path_request_finished",
+                        "on_sector_scanned",
+                        "on_selected_entity_changed",
+                        "on_surface_cleared",
+                        "on_surface_created",
+                        "on_surface_deleted",
+                        "on_surface_imported",
+                        "on_surface_renamed",
+                        "on_technology_effects_reset",
+                        "on_tick",
+                        "on_train_changed_state",
+                        "on_train_created",
+                        "on_train_schedule_changed",
+                        "on_trigger_created_entity",
+                        "script_raised_built",
+                        "script_raised_destroy",
+                        "script_raised_revive"
+                      },
                 },
                 alert_type = {
                     fields = {
@@ -924,7 +994,7 @@ stds.factorio_defines = {
     }
 } --))
 
---[[
+--[[ Options
     "ignore", "std", "globals", "unused_args", "self", "compat", "global", "unused", "redefined",
     "unused_secondaries", "allow_defined", "allow_defined_top", "module",
     "read_globals", "new_globals", "new_read_globals", "enable", "only", "not_globals",
@@ -932,54 +1002,55 @@ stds.factorio_defines = {
     "max_cyclomatic_complexity"
 --]]
 
--- Warnings list
--- 011 A syntax error.
--- 021 An invalid inline option.
--- 022 An unpaired inline push directive.
--- 023 An unpaired inline pop directive.
--- 111 Setting an undefined global variable.
--- 112 Mutating an undefined global variable.
--- 113 Accessing an undefined global variable.
--- 121 Setting a read-only global variable.
--- 122 Setting a read-only field of a global variable.
--- 131 Unused implicitly defined global variable.
--- 142 Setting an undefined field of a global variable.
--- 143 Accessing an undefined field of a global variable.
--- 211 Unused local variable.
--- 212 Unused argument.
--- 213 Unused loop variable.
--- 221 Local variable is accessed but never set.
--- 231 Local variable is set but never accessed.
--- 232 An argument is set but never accessed.
--- 233 Loop variable is set but never accessed.
--- 241 Local variable is mutated but never accessed.
--- 311 Value assigned to a local variable is unused.
--- 312 Value of an argument is unused.
--- 313 Value of a loop variable is unused.
--- 314 Value of a field in a table literal is unused.
--- 321 Accessing uninitialized local variable.
--- 331 Value assigned to a local variable is mutated but never accessed.
--- 341 Mutating uninitialized local variable.
--- 411 Redefining a local variable.
--- 412 Redefining an argument.
--- 413 Redefining a loop variable.
--- 421 Shadowing a local variable.
--- 422 Shadowing an argument.
--- 423 Shadowing a loop variable.
--- 431 Shadowing an upvalue.
--- 432 Shadowing an upvalue argument.
--- 433 Shadowing an upvalue loop variable.
--- 511 Unreachable code.
--- 512 Loop can be executed at most once.
--- 521 Unused label.
--- 531 Left-hand side of an assignment is too short.
--- 532 Left-hand side of an assignment is too long.
--- 541 An empty do end block.
--- 542 An empty if branch.
--- 551 An empty statement.
--- 611 A line consists of nothing but whitespace.
--- 612 A line contains trailing whitespace.
--- 613 Trailing whitespace in a string.
--- 614 Trailing whitespace in a comment.
--- 621 Inconsistent indentation (SPACE followed by TAB).
--- 631 Line is too long.
+--[[ Warnings list
+    -- 011 A syntax error.
+    -- 021 An invalid inline option.
+    -- 022 An unpaired inline push directive.
+    -- 023 An unpaired inline pop directive.
+    -- 111 Setting an undefined global variable.
+    -- 112 Mutating an undefined global variable.
+    -- 113 Accessing an undefined global variable.
+    -- 121 Setting a read-only global variable.
+    -- 122 Setting a read-only field of a global variable.
+    -- 131 Unused implicitly defined global variable.
+    -- 142 Setting an undefined field of a global variable.
+    -- 143 Accessing an undefined field of a global variable.
+    -- 211 Unused local variable.
+    -- 212 Unused argument.
+    -- 213 Unused loop variable.
+    -- 221 Local variable is accessed but never set.
+    -- 231 Local variable is set but never accessed.
+    -- 232 An argument is set but never accessed.
+    -- 233 Loop variable is set but never accessed.
+    -- 241 Local variable is mutated but never accessed.
+    -- 311 Value assigned to a local variable is unused.
+    -- 312 Value of an argument is unused.
+    -- 313 Value of a loop variable is unused.
+    -- 314 Value of a field in a table literal is unused.
+    -- 321 Accessing uninitialized local variable.
+    -- 331 Value assigned to a local variable is mutated but never accessed.
+    -- 341 Mutating uninitialized local variable.
+    -- 411 Redefining a local variable.
+    -- 412 Redefining an argument.
+    -- 413 Redefining a loop variable.
+    -- 421 Shadowing a local variable.
+    -- 422 Shadowing an argument.
+    -- 423 Shadowing a loop variable.
+    -- 431 Shadowing an upvalue.
+    -- 432 Shadowing an upvalue argument.
+    -- 433 Shadowing an upvalue loop variable.
+    -- 511 Unreachable code.
+    -- 512 Loop can be executed at most once.
+    -- 521 Unused label.
+    -- 531 Left-hand side of an assignment is too short.
+    -- 532 Left-hand side of an assignment is too long.
+    -- 541 An empty do end block.
+    -- 542 An empty if branch.
+    -- 551 An empty statement.
+    -- 611 A line consists of nothing but whitespace.
+    -- 612 A line contains trailing whitespace.
+    -- 613 Trailing whitespace in a string.
+    -- 614 Trailing whitespace in a comment.
+    -- 621 Inconsistent indentation (SPACE followed by TAB).
+    -- 631 Line is too long.
+--]]
