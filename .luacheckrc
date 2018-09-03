@@ -814,9 +814,14 @@ stds.factorio_defines = {
                         },
                         tile_filter_mode = {
                             fields = {
-                                "always", "never", "normal", "only",
+                                "whitelist", "blacklist",
                             }
                         },
+                        tile_selection_mode = {
+                            fields = {
+                                "always", "never", "normal", "only",
+                            }
+                        }
                     },
                 },
                 difficulty = {
