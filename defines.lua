@@ -388,6 +388,7 @@ stds.factorio_defines = {
                         'on_player_unbanned',
                         'on_player_unmuted',
                         'on_player_used_capsule',
+                        'on_pre_chunk_deleted',
                         'on_pre_entity_settings_pasted',
                         'on_pre_ghost_deconstructed',
                         'on_pre_player_crafted_item',
