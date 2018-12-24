@@ -197,7 +197,7 @@ stds.factorio_control = {
         -- @commands@:
         commands = {
             fields = {
-                "add_command", "commands", "game_commands",
+                "add_command", "commands", "game_commands", "remove_command",
             },
         },
 
