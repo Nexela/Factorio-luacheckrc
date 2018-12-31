@@ -174,8 +174,8 @@ stds.factorio = {
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
-                "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "make_color", "conditional_return",
-                "add_shift",
+                "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "conditional_return",
+                "add_shift", "merge", "premul_color", "encode", "decode",
                 table = {
                     fields = {
                         "compare", "deepcopy"
