@@ -938,6 +938,30 @@ stds.factorio_defines = {
                         'none'
                     }
                 },
+                entity_status = {
+                    fields = {
+                        'working',
+                        'no_power',
+                        'no_fuel',
+                        'no_recipe',
+                        'no_input_fluid',
+                        'no_research_in_progress',
+                        'no_minable_resources',
+                        'low_input_fluid',
+                        'low_power',
+                        'disabled_by_control_behavior',
+                        'disabled_by_script',
+                        'fluid_ingredient_shortage',
+                        'fluid_production_overload',
+                        'item_ingredient_shortage',
+                        'item_production_overload',
+                        'marked_for_deconstruction',
+                        'missing_required_fluid',
+                        'missing_science_packs',
+                        'waiting_for_source_items',
+                        'waiting_for_space_in_destination',
+                    }
+                },
                 events = {
                     fields = {
                         'on_ai_command_completed',
