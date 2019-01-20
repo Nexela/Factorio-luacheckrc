@@ -623,7 +623,7 @@ stds.stdlib = {
         -- },
     },
     globals = {
-        "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if",
+        "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if", "install",
         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
         "EVENT", "GUI", "PLAYER", "FORCE", "log"
     }
