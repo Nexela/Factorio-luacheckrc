@@ -330,6 +330,7 @@ stds.factorio_control = {
                 "get_active_entities_count",
                 "get_entity_by_tag",
                 "get_map_exchange_string",
+                "get_player",
                 "help",
                 "is_demo",
                 "is_multiplayer",
