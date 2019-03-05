@@ -738,7 +738,7 @@ stds.factorio_defines = {
                 },
                 controllers = {
                     fields = {
-                        "character", "ghost", "god",
+                        "character", "ghost", "god", "editor", "cutscene", "spectator"
                     },
                 },
                 deconstruction_item = {
