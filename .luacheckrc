@@ -327,6 +327,7 @@ stds.factorio_control = {
                 "direction_to_string",
                 "disable_replay",
                 "disable_tips_and_tricks",
+                "draw_resource_selection",
                 "force_crc",
                 "get_active_entities_count",
                 "get_entity_by_tag",
@@ -949,6 +950,13 @@ stds.factorio_defines = {
                         'missing_science_packs',
                         'waiting_for_source_items',
                         'waiting_for_space_in_destination',
+                    }
+                },
+                render_mode = {
+                    fields = {
+                        'game',
+                        'chart',
+                        'chart_zoomed_in'
                     }
                 },
                 events = {
