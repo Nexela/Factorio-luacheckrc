@@ -601,34 +601,14 @@ stds.factorio_circuit_connector_generated = {
 --(( STDLIB ))--
 stds.stdlib = {
     read_globals = {
-        -- table = {
-        --     fields = {
-        --         "map", "avg", "count_keys", "sum", "max", "remove", "insert", "invert", "first", "sort", "compare", "maxn", "any", "array_to_dictionary",
-        --         "each", "flatten", "keys", "filter", "remove_keys", "flexcopy", "find", "fullcopy", "values", "pack", "deepcopy", "concat", "clear", "min",
-        --         "is_empty", "merge", "size", "dictionary_merge", "unpack", "last"
-        --     },
-        -- },
-        -- string = {
-        --     fields = {
-        --         "is_space", "is_empty", "match", "title", "upper", "gmatch", "trim", "split", "len", "ordinal_suffix", "dump", "shorten", "reverse",
-        --         "ends_with", "byte", "starts_with", "join", "is_alpha", "lower", "is_upper", "is_digit", "is_alnum", "rjust", "center", "ljust", "format",
-        --         "char", "is_lower", "contains", "gsub", "find", "rep", "sub"
-        --     },
-        -- },
-        -- math = {
-        --     fields = {
-        --         "asin", "max", "modf", "midrange_mean", "pow", "ldexp", "maxuint16", "fmod", "round_to", "randomseed", "huge", "harmonic_mean", "tan",
-        --         "maxint32", "quadratic_mean", "pi", "energetic_mean", "minint8", "frexp", "generalized_mean", "rad", "sin", "sinh", "min", "geometric_mean",
-        --         "atan", "avg", "cosh", "maxint8", "arithmetic_mean", "exp", "sum", "round", "maxuint64", "minint64", "ceil", "maxint64", "atan2", "floor_to",
-        --         "floor", "log", "maxint16", "minint16", "tanh", "acos", "deg", "cos", "log10", "maxuint8", "abs", "weighted_mean", "random", "maxuint32",
-        --         "sqrt", "minint32"
-        --     }
-        -- },
     },
     globals = {
-        "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if", "install",
-        "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY", "RESOURCE", "CONFIG", "LOGGER", "QUEUE",
-        "EVENT", "GUI", "PLAYER", "FORCE", "log"
+        "Stdlib",
+        "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if", "install", "log",
+        "concat", "safetostring",
+        "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY",
+        "RESOURCE", "CONFIG", "LOGGER", "QUEUE", "EVENT", "GUI", "PLAYER", "FORCE",
+        "MATH", "STRING", "TABLE",
     }
 }
 
