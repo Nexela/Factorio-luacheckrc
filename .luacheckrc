@@ -603,7 +603,7 @@ stds.stdlib = {
     read_globals = {
     },
     globals = {
-        "Stdlib",
+        "STDLIB",
         "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if", "install", "log",
         "concat", "safetostring",
         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY",
