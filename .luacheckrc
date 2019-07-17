@@ -973,6 +973,7 @@ stds.factorio_defines = {
                         'on_gui_checked_state_changed',
                         'on_gui_click',
                         'on_gui_closed',
+                        'on_gui_confirmed',
                         'on_gui_elem_changed',
                         'on_gui_opened',
                         'on_gui_selection_state_changed',
