@@ -605,7 +605,7 @@ stds.stdlib = {
     globals = {
         "STDLIB",
         "prequire", "rawtostring", "traceback", "inspect", "serpent", "inline_if", "install", "log",
-        "concat", "safetostring",
+        "concat",
         "GAME", "AREA", "POSITION", "TILE", "SURFACE", "CHUNK", "COLOR", "ENTITY", "INVENTORY",
         "RESOURCE", "CONFIG", "LOGGER", "QUEUE", "EVENT", "GUI", "PLAYER", "FORCE",
         "MATH", "STRING", "TABLE",
