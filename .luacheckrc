@@ -39,6 +39,7 @@ local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'} -- These
 
 local STD_CONTROL = 'lua52c+factorio+factorio_control+stdlib+factorio_defines'
 local STD_DATA = 'lua52c+factorio+factorio_data+stdlib+stdlib_data+factorio_defines'
+local STD_LOVE = 'luajit+love+love_extra+stdlib+stdlib_data'
 
 -- In a perfect world these would be STD_DATA and STD_CONTROL (mostly)
 local STD_BASE_DATA = 'lua52c+factorio+factorio_data+factorio_defines+factorio_base_data'
@@ -81,6 +82,7 @@ files['**/settings-updates.lua'].std = STD_DATA
 files['**/settings-final-fixes.lua'].std = STD_DATA
 files['**/prototypes/'].std = STD_DATA
 files['**/settings/'].std = STD_DATA
+files['**/love/'] = {std = STD_LOVE, globals = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}}
 
 -------------------------------------------------------------------------------
 --[Base]--
@@ -1499,6 +1501,28 @@ stds.factorio_defines = {
         }
     }
 }--))
+
+stds.love_extra = {
+    read_globals = {
+        love = {
+            fields = {
+                arg = {
+                    fields = {
+                        'parseGameArguments', 'parseOption', 'getLow', 'optionIndices', 'options'
+                    }
+                }
+            }
+        }
+    },
+    globals = {
+        --'coroutine', 'io', 'socket', 'dofile', 'loadfile',
+        love = {
+            fields = {
+                'handlers'
+            }
+        }
+    }
+}
 
 --[[ Options
     "ignore", "std", "globals", "unused_args", "self", "compat", "global", "unused", "redefined",
