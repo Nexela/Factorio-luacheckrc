@@ -360,6 +360,11 @@ stds.factorio_control = {
                 "unban_player",
                 "unmute_player",
                 "write_file",
+                "get_filtered_entity_prototypes",
+                "get_filtered_item_prototypes",
+                "get_filtered_equipment_prototypes",
+                "get_filtered_mod_setting_prototypes",
+                "get_filtered_achievement_prototypes",
 
                 active_mods = {read_only = true, other_fields = true},
                 ammo_category_prototypes = {read_only = true, other_fields = true},
