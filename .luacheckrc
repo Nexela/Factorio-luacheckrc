@@ -68,6 +68,9 @@ exclude_files = {
     '**/combat-tester/',
     '**/test-maker/',
     '**/trailer/',
+
+    --Ignore love Includes
+    '**/love/includes/'
 }
 
 -------------------------------------------------------------------------------
