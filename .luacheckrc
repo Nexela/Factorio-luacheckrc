@@ -227,6 +227,7 @@ stds.factorio_control = {
             other_fields = false,
             read_only = true,
             fields = {
+                'draw_animation',
                 'draw_line',
                 'draw_text',
                 'draw_circle',
