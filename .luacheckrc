@@ -327,6 +327,7 @@ stds.factorio_control = {
                 "create_force",
                 "create_profiler",
                 "create_random_generator",
+                "get_surface",
                 "create_surface",
                 "delete_surface",
                 "desync_players",
