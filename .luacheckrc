@@ -203,7 +203,9 @@ stds.factorio_control = {
         script = {
             fields = {
                 "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
-                "raise_event", "get_event_handler", "mod_name", "get_event_order"
+                "raise_event", "get_event_handler", "mod_name", "get_event_order",
+                "is_game_in_debug_mode", "object_name",
+                active_mods = {read_only = true, other_fields = true},
             },
             other_fields = false,
         },
@@ -372,6 +374,7 @@ stds.factorio_control = {
                 "get_filtered_equipment_prototypes",
                 "get_filtered_mod_setting_prototypes",
                 "get_filtered_achievement_prototypes",
+                "autosave_enabled",
 
                 active_mods = {read_only = true, other_fields = true},
                 ammo_category_prototypes = {read_only = true, other_fields = true},
