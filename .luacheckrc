@@ -158,6 +158,10 @@ stds.factorio = {
         "serpent",
         -- @table_size@: Returns the number of elements inside an LUA table
         "table_size",
+        __DebugAdapter = {
+            fields = {'print'},
+            other_fields = true
+        },
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
