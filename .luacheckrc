@@ -159,8 +159,9 @@ stds.factorio = {
         -- @table_size@: Returns the number of elements inside an LUA table
         "table_size",
         __DebugAdapter = {
-            fields = {'print'},
-            other_fields = true
+            fields = {'print', 'stepIgnoreAll', 'stepIgnore'},
+            other_fields = true,
+            read_only = false
         },
         util = {
             fields = {
