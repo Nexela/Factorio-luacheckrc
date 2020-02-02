@@ -148,6 +148,12 @@ files['**/spec/**'] = {
     std = 'lua52c+busted+factorio_defines+factorio_control+stdlib'
 } --))
 
+local __DebugAdapter = {
+    fields = {'print', 'stepIgnoreAll', 'stepIgnore'},
+    other_fields = true,
+    read_only = false
+}
+
 --(( Factorio ))--
 stds.factorio = {
     --Set the read only variables
@@ -158,11 +164,8 @@ stds.factorio = {
         "serpent",
         -- @table_size@: Returns the number of elements inside an LUA table
         "table_size",
-        __DebugAdapter = {
-            fields = {'print', 'stepIgnoreAll', 'stepIgnore'},
-            other_fields = true,
-            read_only = false
-        },
+        __DebugAdapter = __DebugAdapter,
+        Debugger = __DebugAdapter,
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
