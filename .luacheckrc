@@ -144,7 +144,7 @@ files['**/stdlib/data/'] = stdlib_data
 
 -- STDLIB Busted Spec
 files['**/spec/**'] = {
-    globals = {'serpent', 'log', 'SLOG', 'RESET'},
+    globals = {'serpent', 'log', 'package.remove_stdlib'},
     std = 'lua52c+busted+factorio_defines+factorio_control+stdlib'
 } --))
 
@@ -152,6 +152,11 @@ local __DebugAdapter = {
     fields = {'print', 'stepIgnoreAll', 'stepIgnore'},
     other_fields = true,
     read_only = false
+}
+local lldebugger = {
+    fields = {'requestBreak'},
+    other_fields = true,
+    read_only = false,
 }
 
 --(( Factorio ))--
@@ -164,8 +169,9 @@ stds.factorio = {
         "serpent",
         -- @table_size@: Returns the number of elements inside an LUA table
         "table_size",
+        lldebugger = lldebugger,
         __DebugAdapter = __DebugAdapter,
-        Debugger = __DebugAdapter,
+        DebugAdapter = __DebugAdapter,
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
