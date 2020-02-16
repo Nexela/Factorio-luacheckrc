@@ -171,7 +171,6 @@ stds.factorio = {
         "table_size",
         lldebugger = lldebugger,
         __DebugAdapter = __DebugAdapter,
-        DebugAdapter = __DebugAdapter,
         util = {
             fields = {
                 "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
@@ -206,9 +205,11 @@ stds.factorio_control = {
         settings = {
             fields = {
                 "get_player_settings",
-                startup = {read_only = false, other_fields = true},
-                global = {read_only = false, other_fields = true},
-                player = {read_only = false, other_fields = true},
+                startup = {other_fields = true},
+                global = {other_fields = true},
+                player = {other_fields = true},
+                get = {read_only = false}, -- stdlib added
+                get_startup = {read_only = false} -- stdlib added
             },
         },
 
@@ -345,12 +346,14 @@ stds.factorio_control = {
                 "create_random_generator",
                 "get_surface",
                 "create_surface",
+                "decode_string",
                 "delete_surface",
                 "desync_players",
                 "direction_to_string",
                 "disable_replay",
                 "disable_tips_and_tricks",
                 "draw_resource_selection",
+                "encode_string",
                 "force_crc",
                 "get_active_entities_count",
                 "get_entity_by_tag",
@@ -457,7 +460,7 @@ stds.factorio_data = {
 
         settings = {
             fields = {
-                "startup", "global", "player",
+                "startup", "global", "player", "get", "get_startup"
             },
         },
 
@@ -985,6 +988,7 @@ stds.factorio_defines = {
                         "on_research_started",
                         "on_research_finished",
                         "on_player_rotated_entity",
+                        "on_player_set_quickbar_slot",
                         "on_marked_for_deconstruction",
                         "on_cancelled_deconstruction",
                         "on_trigger_created_entity",
