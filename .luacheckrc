@@ -637,6 +637,7 @@ do -- STDLIB STDs--
             'prequire',
             'rawtostring',
             'traceback',
+            'data_traceback',
             'inspect',
             'serpent',
             'inline_if',
