@@ -26,46 +26,27 @@
 
     For more information, please refer to <http://unlicense.org/>
 ------------------------------------------------------------------------------]]
-local LINE_LENGTH = false
-
-local IGNORE = {'21./%w+_$', '21./^_%w+$', '213/[ijk]', '213/index', '213/key'}
-
--- These globals are not available to the factorio API
-local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}
-
 local STD_CONTROL = 'lua52+factorio+factorio_control+stdlib+factorio_defines'
-local STD_DATA = 'lua52+factorio+factorio_data+stdlib+stdlib_data+factorio_defines'
-
--- For Base and Core Mods
-local STD_BASE_DATA = 'lua52+factorio+factorio_data+factorio_defines+factorio_base_data'
-local STD_BASE_CONTROL = 'lua52+factorio+factorio_control+factorio_defines+factorio_base_control'
+local STD_DATA = 'lua52+factorio+factorio_data+stdlib+stdlib_data+factorio_defines+factorio_data_globals'
 
 do -- Assume Factorio Control Stage as Default
     std = STD_CONTROL
     --cache = true
-    not_globals = NOT_GLOBALS
-    ignore = IGNORE
+    not_globals = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}
+    ignore = {'21./%w+%_$', '21./^%_%w+$', '213/[ijk]', '213/index', '213/key'}
     quiet = 1 -- pass -q option
     max_cyclomatic_complexity = false
     codes = true
-    max_line_length = LINE_LENGTH
-    max_code_line_length = LINE_LENGTH
-    max_string_line_length = LINE_LENGTH
-    max_comment_line_length = LINE_LENGTH
+    max_line_length = false
+    max_code_line_length = false
+    max_string_line_length = false
+    max_comment_line_length = false
+    globals = {'_'}
 
-    --List of files and directories to exclude
     exclude_files = {
-        --Ignore special folders
         '**/.trash/',
         '**/.history/',
         '**/stdlib/vendor/',
-
-        --Ignore development mods
-        '**/combat-tester/',
-        '**/test-maker/',
-        '**/trailer/',
-
-        --Ignore love Includes
         '**/love/includes/'
     }
 end
@@ -81,83 +62,75 @@ do -- Set default prototype files
     files['**/settings/'].std = STD_DATA
 end
 
-do -- Base and Core mod files
-    local base_scenarios = {
-        std = STD_BASE_CONTROL .. '+factorio_base_scenarios+factorio_base_story',
-        --ignore = {'212/event', '111', '112', '113', '211', '212', '213', '311', '411', '412', '421', '422', '423', '431', '432', '512'}
-        ignore = {'...'}
-    }
-    files['**/base/scenarios/'] = base_scenarios
-    files['**/base/tutorials/'] = base_scenarios
-    files['**/base/campaigns/'] = base_scenarios
-    files['**/wip-scenario/'] = base_scenarios
+do -- Factorio Files
+    local CONTROL = 'lua52+factorio+factorio_control+factorio_defines+factorio_control_globals'
+    local DATA = 'lua52+factorio+factorio_data+factorio_defines+factorio_data_globals'
+    local ignores = {--[['1..', '2..', '3..', '499', '5..',--]] '6..'}
 
-    files['**/base/migrations/'] = {std = STD_BASE_CONTROL}
+    local FACTORIO_SCENARIOS = {std = CONTROL, ignore = {'...'}, allow_defined_top = false, unused_args = false}
+    local FACTORIO_DEVELOPMENT = {std = CONTROL, ignore = {'...'}, allow_defined_top = false, unused_args = false}
 
-    files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
-    files['**/core/lualib/util.lua'] = {globals = {'util', 'table'}, ignore = {'432/object'}}
-    files['**/core/lualib/silo-script.lua'] = {globals = {'silo_script'}, ignore = {'4../player'}}
-    files['**/core/lualib/production-score.lua'] = {globals = {'production_score', 'get_price_recursive'}, ignore = {'4../player'}}
-    files['**/core/lualib/story*'] = {std = '+factorio_base_story', ignore = {'42./k', '42./filter'}}
-    files['**/core/lualib/mod-gui.lua'] = {globals = {'mod_gui'}}
-    files['**/core/lualib/camera.lua'] = {globals = {'camera'}}
-    files['**/core/lualib/builder.lua'] = {globals = {'Builder', 'builder', 'action', 'down', 'right'}}
+    do -- Factorio Base files
+        files['**/base'] = {std = CONTROL, unused_args = false, ignore = ignores}
+        files['**/base/prototypes/'] = {std = DATA, ignore = {'131'}}
+        files['**/base/lualib'] = {STD = CONTROL, globals = {'mod_name', 'active_player', 'campaign_debug_mode'}}
+        files['**/base/migrations/'] = {std = CONTROL}
 
-    files['**/core/lualib/bonus-gui-ordering/'] = {std = STD_BASE_DATA}
-    files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
-    files['**/core/lualib/circuit-connector-*'] = {std = STD_BASE_DATA..'+factorio_circuit_connector_generated'}
-    files['**/core/lualib/bonus-gui-ordering.lua'] = {globals = {'bonus_gui_ordering'}}
+        files['**/base/scenarios/'] = FACTORIO_SCENARIOS -- todo
+        files['**/base/tutorials/'] = FACTORIO_SCENARIOS -- todo
+        files['**/base/campaigns/'] = FACTORIO_SCENARIOS -- todo
+    end
 
-    files['**/base/prototypes/'] = {std = STD_BASE_DATA}
-    files['**/core/prototypes/'] = {std = STD_BASE_DATA}
-    files['**/core/prototypes/noise-programs.lua'] = {ignore = {'212/x', '212/y', '212/tile', '212/map'}}
+    do -- Factorio Core files
+        files['**/core/'] = {std = CONTROL, unused_args = false, ignore = ignores}
+        files['**/core/prototypes/'] = {std = DATA, ignore = {'131'}}
+
+        files['**/core/lualib/'] = {std = CONTROL}
+        files['**/core/lualib/util.lua'] = {std = CONTROL, globals = {'table.deepcopy', 'table.compare', 'util'}}
+        files['**/core/lualib/builder.lua'] = {std = '+lua52c', globals = {'down', 'right', 'Builder', 'builder'}}
+        files['**/core/lualib/mod-gui.lua'] = {globals = {'mod_gui'}}
+        files['**/core/lualib/silo-script.lua'] = {std = '+factorio_silo_script'}
+        files['**/core/lualib/noise.lua'] = {globals = {'fixne', 'log2'}}
+        files['**/core/lualib/story*'] = {ignore = {'131'}}
+
+        files['**/core/lualib/resource-autoplace.lua'] = {std = DATA}
+        files['**/core/lualib/bonus-gui-ordering.lua'] = {std = DATA, globals = {'bonus_gui_ordering'}}
+        files['**/core/lualib/circuit-connector-*'] = {std = DATA}
+        files['**/core/lualib/dataloader.lua'] = {std = DATA, globals = {'data'}}
+    end
+
+    do -- Factorio Development Files
+        files['**/wip-scenario/'] = FACTORIO_DEVELOPMENT
+        files['**/combat-tester/'] = FACTORIO_DEVELOPMENT
+        files['**/test-maker/'] = FACTORIO_DEVELOPMENT
+        files['**/trailer/'] = FACTORIO_DEVELOPMENT
+        files['**/extreme-gui/'] = FACTORIO_DEVELOPMENT
+    end
 end
 
-do -- Stdlib Files
-    local stdlib_control = {
-        std = 'lua52+factorio+factorio_control+stdlib+factorio_defines',
-        max_line_length = LINE_LENGTH
-    }
-
-    local stdlib_data = {
-        std = 'lua52+factorio+factorio_data+stdlib+factorio_defines',
-        max_line_length = LINE_LENGTH
-    }
-
-    -- Assume control stage for stdlib
-    files['**/stdlib/'] = stdlib_control
-
-    -- Assume generic lua for stdlib utils
+do -- STDLIB Files
+    files['**/stdlib/'].std = 'lua52+factorio+factorio_control+stdlib+factorio_defines'
     files['**/stdlib/utils/**'].std = 'lua52+stdlib'
-
-    -- STDLIB data stage files
-    files['**/stdlib/data/'] = stdlib_data
-
-    -- STDLIB Busted Spec
-    files['**/spec/**'] = {
-        globals = {'serpent', 'log', 'package.remove_stdlib'},
-        std = 'lua52c+busted+factorio_defines+factorio_control+stdlib'
-    }
-
-    -- Love
+    files['**/stdlib/data/'].std = 'lua52+factorio+factorio_data+stdlib+factorio_defines'
+    files['**/spec/**'] = {std = 'lua52c+busted+factorio_defines+factorio_control+stdlib', globals = {'serpent', 'log', 'package.remove_stdlib'}}
     files['**/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
 end
 
-do -- Factorio STDs--
+do -- STD Factorio--
     stds.factorio = {
         --Set the read only variables
         read_globals = {
             -- @log@: Gives writing access to Factorio's logger instance.
-            "log",
+            'log',
             -- @serpent@: Lua serializer and pretty printer. (https://github.com/pkulchenko/serpent).
-            "serpent",
+            'serpent',
             -- @table_size@: Returns the number of elements inside an LUA table.
-            "table_size",
+            'table_size',
             -- @lldebugger@: Provided by lua local debugger vscode extension.
             lldebugger = {
                 fields = {'requestBreak'},
                 other_fields = true,
-                read_only = false,
+                read_only = false
             },
             -- @__DebugAdapter@: Provided by Factorio Mod Debug vscode extension.
             __DebugAdapter = {
@@ -167,73 +140,115 @@ do -- Factorio STDs--
             },
             util = {
                 fields = {
-                    "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
-                    "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "conditional_return",
-                    "add_shift", "merge", "premul_color", "encode", "decode", "insert_safe",
+                    'color',
+                    'distance',
+                    'clamp',
+                    'multiplystripes',
+                    'empty_sprite',
+                    'conditional_return',
+                    'table',
+                    'positiontostr',
+                    'copy',
+                    'string_starts_with',
+                    'merge',
+                    'format_number',
+                    'by_pixel',
+                    'mix_color',
+                    'add_shift_offset',
+                    'by_pixel_hr',
+                    'premul_color',
+                    'split',
+                    'foreach_sprite_definition',
+                    'product_amount',
+                    'parse_energy',
+                    'combine_icons',
+                    'insert_safe',
+                    'multiply_color',
+                    'get_walkable_tile',
+                    'moveposition',
+                    'online_players',
+                    'oppositedirection',
+                    'increment',
+                    'add_shift',
+                    'split_whitespace',
+                    'formattime',
+                    'mul_shift',
                     table = {
                         fields = {
-                            "compare", "deepcopy"
-                        },
-                    },
-                },
+                            'compare',
+                            'deepcopy'
+                        }
+                    }
+                }
             },
             table = {
                 fields = {
-                    "compare", "deepcopy"
-                },
-            },
-        },
+                    'compare',
+                    'deepcopy'
+                }
+            }
+        }
     }
 
     stds.factorio_control = {
         read_globals = {
-
             -- @commands@:
             commands = {
                 fields = {
-                    "add_command", "commands", "game_commands", "remove_command"
-                },
+                    'add_command',
+                    'commands',
+                    'game_commands',
+                    'remove_command'
+                }
             },
-
             -- @settings@:
             settings = {
                 fields = {
-                    "get_player_settings",
+                    'get_player_settings',
                     startup = {other_fields = true},
                     global = {other_fields = true},
                     player = {other_fields = true},
                     get = {read_only = false}, -- stdlib added
                     get_startup = {read_only = false} -- stdlib added
-                },
+                }
             },
-
             -- @script@: Provides an interface for registering event handlers.
             -- (http://lua-api.factorio.com/latest/LuaBootstrap.html)
             script = {
                 fields = {
-                    "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
-                    "raise_event", "get_event_handler", "mod_name", "get_event_order",
-                    "is_game_in_debug_mode", "object_name", "set_event_filter", "get_event_filter",
-                    active_mods = {read_only = true, other_fields = true},
+                    'on_event',
+                    'on_nth_tick',
+                    'on_configuration_changed',
+                    'on_init',
+                    'on_load',
+                    'generate_event_name',
+                    'raise_event',
+                    'get_event_handler',
+                    'mod_name',
+                    'get_event_order',
+                    'is_game_in_debug_mode',
+                    'object_name',
+                    'set_event_filter',
+                    'get_event_filter',
+                    active_mods = {read_only = true, other_fields = true}
                 },
-                other_fields = false,
+                other_fields = false
             },
-
             -- @remote@: Allows inter-mod communication by providing a repository of interfaces that is shared by all mods.
             -- (http://lua-api.factorio.com/latest/LuaRemote.html)
             remote = {
                 fields = {
                     interfaces = {read_only = false, other_fields = true},
-                    "add_interface", "remove_interface", "call"
+                    'add_interface',
+                    'remove_interface',
+                    'call'
                 },
                 read_only = true,
-                other_fields = false,
+                other_fields = false
             },
-
             rcon = {
                 fields = {'print'}
             },
-
             rendering = {
                 other_fields = false,
                 read_only = true,
@@ -302,6 +317,8 @@ do -- Factorio STDs--
                     'set_start_angle',
                     'get_angle',
                     'set_angle',
+                    'set_visible',
+                    'get_visible',
                     'get_vertices',
                     'set_vertices',
                     'get_sprite',
@@ -322,11 +339,10 @@ do -- Factorio STDs--
                     'set_minimum_darkness'
                 }
             },
-
             -- @game@: Main object through which most of the API is accessed.
             -- It is, however, not available inside handlers registered with @script.on_load@.
             -- (http://lua-api.factorio.com/latest/LuaGameScript.html)
-            game ={
+            game = {
                 other_fields = false,
                 read_only = false,
                 fields = {
@@ -396,7 +412,6 @@ do -- Factorio STDs--
                     'unban_player',
                     'unmute_player',
                     'write_file',
-
                     achievement_prototypes = {read_only = true, other_fields = true},
                     active_mods = {read_only = true, other_fields = true},
                     ammo_category_prototypes = {read_only = true, other_fields = true},
@@ -443,30 +458,26 @@ do -- Factorio STDs--
                     tile_prototypes = {read_only = true, other_fields = true},
                     trivial_smoke_prototypes = {read_only = true, other_fields = true},
                     virtual_signal_prototypes = {read_only = true, other_fields = true},
-
                     autosave_enabled = {read_only = false, other_fields = false},
                     draw_resource_selection = {read_only = false, other_fields = false},
                     enemy_has_vision_on_land_mines = {read_only = false, other_fields = false},
                     speed = {read_only = false, other_fields = false},
                     tick_paused = {read_only = false, other_fields = false},
                     ticks_to_run = {read_only = false, other_fields = false}
-                },
-            },
+                }
+            }
         },
-
         globals = {
             -- @global@: The global dictionary, useful for storing data persistent across a save-load cycle.
             -- Writing access is given to the mod-id field (for mod-wise saved data).
             -- (http://lua-api.factorio.com/latest/Global.html)
-            "global",
-
+            'global',
             -- @MOD@: Keep it organized, use this variable for anything that "NEEDS" to be global for some reason.
-            "MOD"
-        },
+            'MOD'
+        }
     }
 
     stds.factorio_data = {
-
         read_globals = {
             data = {
                 fields = {
@@ -474,188 +485,446 @@ do -- Factorio STDs--
                         other_fields = true,
                         read_only = false
                     },
-                    "extend", "is_demo"
-                },
+                    'extend',
+                    'is_demo'
+                }
             },
-
             settings = {
                 fields = {
-                    "startup", "global", "player", "get", "get_startup"
-                },
+                    'startup',
+                    'global',
+                    'player',
+                    'get',
+                    'get_startup'
+                }
             },
-
             mods = {
                 other_fields = true
             },
-
             -- Popular mods that think they need globals!
             angelsmods = {
                 other_fields = true
             },
-
             -- Popular mods that think they need globals!
             bobmods = {
                 other_fields = true
-            },
-
-
+            }
         }
     }
 end
 
-do -- Factorio Base/Core STDs--
-    stds.factorio_base_control = {
-        read_globals = {"silo_script", "mod_gui", "camera"}
-    }
-
-    stds.factorio_base_scenarios = {
+do -- STD Factorio Globals--
+    stds.factorio_data_globals = {
         globals = {
-            "check_automate_science_packs_advice", "check_research_hints", "check_supplies", "manage_attacks", "all_dead",
-            "on_win", "difficulty_number", "init_attack_data", "handle_attacks", "count_items_in_container", "progress", "scanned",
-            "check_light", "check_machine_gun", "level", "story_table",
-
-            "tightspot_prices", "tightspot_make_offer", "tightspot_init", "tightspot_get_required_balance",
-            "tightspot_init_level", "tightspot_init_spending_frame", "tightspot_init_progress_frame", "tightspot_update_progress", "tightspot_update_spending",
-            "tightspot_get_missing_to_win", "tightspot_sell_back", "tightspot_start_level", "tightspot_show_level_description", "tightspot_update_speed_label",
-            "map_ignore", "tightspot_check_level", "land_price",
-
-            "transport_belt_madness_init", "transport_belt_madness_init_level", "transport_belt_madness_create_chests", "transport_belt_madness_fill_chests",
-            "transport_belt_madness_start_level", "map_ignore", "map_clear", "map_load", "map_save", "transport_belt_madness_show_level_description",
-            "transport_belt_madness_check_level", "transport_belt_madness_next_level", "transport_belt_madness_clear_level", "transport_belt_madness_contains_next_level",
-
-            "restricted", "check_built_items", "result", "disable_combat_technologies", "apply_character_modifiers", "apply_combat_modifiers", "apply_balance",
-            "load_config", "starting_area_constant", "create_next_surface", "end_round", "prepare_next_round", "silo_died","choose_joining_gui",
-            "destroy_joining_guis", "create_random_join_gui", "create_auto_assign_gui", "create_pick_join_gui", "create_config_gui", "make_config_table", "default",
-            "make_team_gui", "make_team_gui_config", "add_team_button_press", "trash_team_button_press", "remove_team_from_team_table", "add_team_to_team_table",
-            "set_teams_from_gui", "on_team_button_press", "make_color_dropdown", "create_balance_option", "create_disable_frame", "disable_frame", "parse_disabled_items",
-            "set_balance_settings", "config_confirm", "parse_config_from_gui", "get_color", "roll_starting_area", "delete_roll_surfaces", "auto_assign",
-            "destroy_config_for_all", "prepare_map", "set_evolution_factor", "update_players_on_team_count", "random_join", "init_player_gui",
-            "destroy_player_gui", "objective_button_press", "admin_button_press", "admin_frame_button_press", "diplomacy_button_press", "update_diplomacy_frame",
-            "diplomacy_frame_button_press", "team_changed_diplomacy", "diplomacy_check_press", "get_stance", "give_inventory", "setup_teams", "disable_items_for_all",
-            "set_random_team", "set_diplomacy", "create_spawn_positions", "set_spawn_position", "set_team_together_spawns", "chart_starting_area_for_force_spawns",
-            "check_starting_area_chunks_are_generated", "check_player_color", "check_round_start", "clear_starting_area_enemies", "check_no_rush_end", "check_no_rush_players",
-            "finish_setup", "chart_area_for_force", "setup_start_area_copy", "update_copy_progress", "update_progress_bar", "copy_paste_starting_area_tiles",
-            "copy_paste_starting_area_entities", "create_silo_for_force", "setup_research", "on_chunk_generated", "get_distance_to_nearest_spawn",
-            "create_wall_for_force", "fpn", "give_items", "create_item_frame", "create_technologies_frame", "create_cheat_frame", "create_day_frame",
-            "time_modifier", "points_per_second_start", "points_per_second_level_subtract", "levels", "update_info", "get_time_left", "update_time_left",
-            "on_joined", "make_frame", "update_frame", "update_table", "calculate_task_item_multiplayer", "setup_config", "select_from_probability_table",
-            "select_inventory", "select_equipment", "select_challange_type", "save_round_statistics", "start_challenge", "create_teams", "set_areas",
-            "decide_player_team", "set_teams", "refresh_leaderboard", "set_player", "generate_technology_list", "generate_research_task","setup_unlocks",
-            "check_technology_progress", "generate_production_task", "generate_shopping_list_task", "set_gui_flow_table", "create_visibility_button",
-            "check_item_lists", "update_task_gui", "check_end_of_round", "end_round_gui_update", "try_to_check_victory", "update_gui", "check_start_round",
-            "check_start_set_areas", "check_start_setting_entities", "check_set_areas", "check_clear_areas", "check_chests", "check_chests_shopping_list",
-            "check_chests_production", "check_input_chests", "fill_input_chests", "check_victory", "shopping_task_finished", "calculate_force_points",
-            "update_research_task_table", "update_production_task_table", "update_shopping_list_task_table", "create_joined_game_gui", "pre_ending_round",
-            "player_ending_prompt", "update_end_timer", "update_begin_timer", "team_finished", "save_points_list", "give_force_players_points",
-            "update_winners_list", "set_spectator", "set_character", "give_starting_inventory", "give_equipment", "shuffle_table", "format_time",
-            "spairs", "fill_leaderboard", "create_grid", "simple_entities", "save_map_data", "clear_map", "create_tiles", "recreate_entities",
-            "map_sets", "give_points", "init_forces", "init_globals", "init_unit_settings", "check_next_wave", "next_wave", "calculate_wave_power",
-            "wave_end", "make_next_spawn_tick", "check_spawn_units", "get_wave_units", "spawn_units", "randomize_ore", "set_command", "command_straglers",
-            "unit_config", "make_next_wave_tick", "time_to_next_wave", "time_to_wave_end", "rocket_died", "unit_died", "get_bounty_price", "setup_waypoints",
-            "insert_items", "give_starting_equipment", "give_spawn_equipment", "next_round_button_visible", "gui_init", "create_wave_frame", "create_money_frame",
-            "create_upgrade_gui", "update_upgrade_listing", "upgrade_research", "get_upgrades", "get_money", "update_connected_players", "update_round_number",
-            "set_research", "set_recipes", "check_deconstruction", "check_blueprint_placement", "loop_entities", "experiment_items",
-            "setup", "story_gui_click", "clear_surface", "add_run_trains_button", "puzzle_condition", "basic_signals",
-            "loop_trains", "Y_offset", "ghosts_1", "ghosts_2", "required_path", "through_wall_path", "count", "check_built_real_rail",
-            "current_ghosts_count", "other", "rails", "set_rails", "straight_section", "late_entities", "entities", "stop",
-            "get_spawn_coordinate",
-
-            --tutorials
-            "intermission", "create_entities_on_tick", "on_player_created", "required_count", "non_player_entities", "clear_rails",
-            "chest", "damage", "furnace", "init_prototypes", "build_infi_table", "junk", "update_player_tags", "time_left", "team_production",
-            "create_task_frame", "create_visibilty_buttons", "update_leaderboard", "in_in_area"
-        }
-    }
-
-    stds.factorio_base_data = {
-        globals = {
-            --Style
-            "make_cursor_box", "make_full_cursor_box",
-            "default_container_padding", "default_orange_color", "default_light_orange_color", "warning_red_color",
-            "achievement_green_color", "achievement_tan_color", "orangebuttongraphcialset", "bluebuttongraphcialset",
-            "bonus_gui_ordering", "trivial_smoke", "technology_slot_base_width", "technology_slot_base_height", "default_frame_font_vertical_compensation",
-
-            --Belts
-            "transport_belt_connector_frame_sprites", "transport_belt_circuit_wire_connection_point", "transport_belt_circuit_wire_max_distance",
-            "transport_belt_circuit_connector_sprites", "ending_patch_prototype", "basic_belt_horizontal", "basic_belt_vertical",
-            "basic_belt_ending_top", "basic_belt_ending_bottom", "basic_belt_ending_side", "basic_belt_starting_top", "basic_belt_starting_bottom",
-            "basic_belt_starting_side", "fast_belt_horizontal", "fast_belt_vertical", "fast_belt_ending_top", "fast_belt_ending_bottom",
-            "fast_belt_ending_side", "fast_belt_starting_top", "fast_belt_starting_bottom", "fast_belt_starting_side", "express_belt_horizontal",
-            "express_belt_vertical", "express_belt_ending_top", "express_belt_ending_bottom", "express_belt_ending_side", "express_belt_starting_top",
-            "express_belt_starting_bottom", "express_belt_starting_side",
-
-            --Circuit Connectors
-            "circuit_connector_definitions", "default_circuit_wire_max_distance", "inserter_circuit_wire_max_distance",
-            "universal_connector_template", "belt_connector_template", "belt_frame_connector_template", "inserter_connector_template",
-
-            --Inserter Circuit Connectors
-            "inserter_circuit_wire_max_distance", "inserter_default_stack_control_input_signal",
-
-            --Sounds/beams
-            "make_heavy_gunshot_sounds", "make_light_gunshot_sounds", "make_laser_sounds",
-
-            --Gun/Laser
-            "gun_turret_extension", "gun_turret_extension_shadow", "gun_turret_extension_mask", "gun_turret_attack",
-            "laser_turret_extension", "laser_turret_extension_shadow", "laser_turret_extension_mask",
-
-            --Pipes
-            "pipecoverspictures", "pipepictures", "assembler2pipepictures", "assembler3pipepictures", "make_heat_pipe_pictures",
-
-            --Combinators
-            "generate_arithmetic_combinator", "generate_decider_combinator", "generate_constant_combinator",
-
-            --Rail
-            "destroyed_rail_pictures", "rail_pictures", "rail_pictures_internal", "standard_train_wheels", "drive_over_tie",
-            "rolling_stock_back_light", "rolling_stock_stand_by_light",
-
-            --Enemies
-            "make_enemy_autoplace", "make_enemy_spawner_autoplace", "make_enemy_worm_autoplace",
-            "make_spitter_attack_animation", "make_spitter_run_animation", "make_spitter_dying_animation",
-            "make_spitter_attack_parameters", "make_spitter_roars", "make_spitter_dying_sounds",
-            "make_spawner_idle_animation", "make_spawner_die_animation",
-            "make_biter_run_animation", "make_biter_attack_animation", "make_biter_die_animation",
-            "make_biter_roars", "make_biter_dying_sounds", "make_biter_calls",
-            "make_worm_roars", "make_worm_dying_sounds", "make_worm_folded_animation", "make_worm_preparing_animation",
-            "make_worm_prepared_animation", "make_worm_attack_animation", "make_worm_die_animation",
-
-            --Other
-            "tile_variations_template", "make_water_autoplace_settings",
-            "make_unit_melee_ammo_type",  "make_trivial_smoke", "make_4way_animation_from_spritesheet", "flying_robot_sounds",
-            "productivitymodulelimitation", "crash_trigger", "capsule_smoke", "make_beam", "playeranimations",
-            "make_blood_tint", "make_shadow_tint",
-
-            --tiles
-            "water_transition_template", "make_water_transition_template", "water_autoplace_settings", "water_tile_type_names",
-            "patch_for_inner_corner_of_transition_between_transition",
-        }
-    }
-
-    stds.factorio_base_story = {
-        globals = {
-            "story_init_helpers", "story_update_table", "story_init", "story_update", "story_on_tick", "story_add_update",
-            "story_remove_update", "story_jump_to", "story_elapsed", "story_elapsed_check", "story_show_message_dialog",
-            "set_goal", "player_set_goal", "on_player_joined", "flash_goal", "set_info", "player_set_info", "export_entities",
-            "list", "recreate_entities", "entity_to_connect", "limit_camera", "find_gui_recursive", "enable_entity_export",
-            "add_button", "on_gui_click", "set_continue_button_style", "add_message_log", "story_add_message_log",
-            "player_add_message_log", "message_log_frame", "message_log_scrollpane", "message_log_close_button",
-            "message_log_table", "toggle_message_log_button", "toggle_objective_button", "message_log_init",
-            "add_gui_recursive", "add_toggle_message_log_button", "add_toggle_objective_button", "mod_gui",
-            "flash_message_log_button", "flash_message_log_on_tick", "story_gui_click", "story_points_by_name", "story_branches",
-            "player", "surface", "deconstruct_on_tick", "recreate_entities_on_tick", "flying_congrats", "story_table"
-        }
-    }
-
-    stds.factorio_circuit_connector_generated = {
-        globals = {
-            'default_circuit_wire_max_distance', 'circuit_connector_definitions', 'universal_connector_template',
-            'belt_connector_template', 'belt_frame_connector_template', 'inserter_connector_template', 'inserter_connector_template',
-            'inserter_circuit_wire_max_distance', 'inserter_default_stack_control_input_signal', 'transport_belt_connector_frame_sprites',
+            'accumulator_charge',
+            'accumulator_discharge',
+            'accumulator_picture',
+            'accumulator_reflection',
+            'achievement_green_color',
+            'achievement_tan_color',
+            'acid_splash_fire',
+            'acid_sticker',
+            'acid_stream',
+            'acid_tint_big',
+            'acid_tint_medium',
+            'add_biter_die_animation',
+            'add_spitter_die_animation',
+            'alternate_frame_sequence',
+            'append_base_electric_beam_graphics',
+            'arrow_back',
+            'arrow_clicked_index',
+            'arrow_disabled_index',
+            'arrow_forward',
+            'arrow_hovered_index',
+            'arrow_idle_index',
+            'arrow_tileset_composition_corner_size',
+            'arrow_tileset_height',
+            'arrow_tileset_width',
+            'assembler2pipepictures',
+            'assembler3pipepictures',
+            'back_button_glow',
+            'base_tile_transition_effect_maps',
+            'basic_belt_animation_set',
+            'basic_belt_ending_bottom',
+            'basic_belt_ending_side',
+            'basic_belt_ending_top',
+            'basic_belt_horizontal',
+            'basic_belt_starting_bottom',
+            'basic_belt_starting_side',
+            'basic_belt_starting_top',
+            'basic_belt_vertical',
+            'behemoth_biter_scale',
+            'behemoth_biter_tint1',
+            'behemoth_biter_tint2',
+            'belt_connector_template',
+            'belt_frame_connector_template',
+            'big_biter_scale',
+            'big_biter_tint1',
+            'big_biter_tint2',
+            'biter_ai_settings',
+            'biter_spawner_tint',
+            'biter_water_reflection',
+            'biterattackanimation',
+            'biterdieanimation',
+            'biteridleanimation',
+            'biterrunanimation',
+            'bloodparticlescale',
+            'bloodtint',
+            'blue_slot_glow_color',
+            'bluebuttongraphcialset',
+            'boiler_reflection',
+            'bold_font_color',
+            'bonus_gui_ordering',
+            'border_image_set',
+            'bottom_glow',
+            'bottom_right_glow',
+            'bottom_right_shadow',
+            'bottom_shadow',
+            'button_default_bold_font_color',
+            'button_default_font_color',
+            'button_hovered_font_color',
+            'capsule_smoke',
+            'car_reflection',
+            'character_animations',
+            'circuit_connector_definitions',
+            'crash_site_assembling_machine_1_animation_speed',
+            'crash_site_assembling_machine_2_animation_speed',
+            'crash_site_generator_animation_speed',
+            'crash_trigger',
+            'create_follower_upgrade',
+            'create_water_transitions_between_transitions',
+            'damage_modifier_spitter_behemoth',
+            'damage_modifier_spitter_big',
+            'damage_modifier_spitter_medium',
+            'damage_modifier_spitter_small',
+            'damage_modifier_worm_behemoth',
+            'damage_modifier_worm_big',
+            'damage_modifier_worm_medium',
+            'damage_modifier_worm_small',
+            'damage_splash_spitter_behemoth',
+            'damage_splash_spitter_big',
+            'damage_splash_spitter_medium',
+            'damage_splash_spitter_small',
+            'damage_splash_worm_behemoth',
+            'damage_splash_worm_big',
+            'damage_splash_worm_medium',
+            'damage_splash_worm_small',
+            'default_circuit_wire_max_distance',
+            'default_container_padding',
+            'default_container_spacing',
+            'default_dirt',
+            'default_dirt_color',
+            'default_dirt_color_filler',
+            'default_disabled_font_color',
+            'default_font_color',
+            'default_glow',
+            'default_glow_color',
+            'default_inner_glow',
+            'default_inner_shadow',
+            'default_light_orange_color',
+            'default_orange_color',
+            'default_shadow',
+            'default_shadow_color',
+            'default_slot_glow_color',
+            'default_top_container_padding',
+            'default_transition_group_id',
+            'destroyed_rail_pictures',
+            'double_arrow_forward',
+            'double_arrow_forward_button_glow',
+            'drive_over_tie',
+            'end_attack_frame_sequence',
+            'enemy_autoplace',
+            'express_belt_animation_set',
+            'fast_belt_animation_set',
+            'featured_technology_slot_base_height',
+            'featured_technology_slot_base_width',
+            'forward_button_glow',
+            'generate_arithmetic_combinator',
+            'generate_constant_combinator',
+            'generate_decider_combinator',
+            'generic_transition_between_transitions_template',
+            'glow_without_bottom',
+            'glow_without_left',
+            'glow_without_right',
+            'glow_without_top',
+            'green_arrow_tileset',
+            'green_button_glow_color',
+            'green_slot_glow_color',
+            'grey_arrow_tileset',
+            'ground_patch_scale_modifier',
+            'gun_turret_attack',
+            'gun_turret_extension',
+            'gun_turret_extension_mask',
+            'gun_turret_extension_shadow',
+            'hard_shadow_color',
+            'heading_font_color',
+            'heat_glow_tint',
+            'hr_crash_site_assembling_machine_1_ground',
+            'hr_crash_site_assembling_machine_2_ground',
+            'hr_crash_site_lab_ground',
+            'init_transition_between_transition_common_options',
+            'init_transition_between_transition_water_out_of_map_options',
+            'inner_frame_dark',
+            'inner_frame_tab_pane',
+            'inserter_circuit_wire_max_distance',
+            'inserter_connector_template',
+            'inserter_default_stack_control_input_signal',
+            'laser_turret_extension',
+            'laser_turret_extension_mask',
+            'laser_turret_extension_shadow',
+            'laser_turret_shooting',
+            'laser_turret_shooting_glow',
+            'laser_turret_shooting_mask',
+            'laser_turret_shooting_shadow',
+            'left_slider_glow',
+            'locomotive_reflection',
+            'logistic_chest_opened_duration',
+            'make_4way_animation_from_spritesheet',
+            'make_beam',
+            'make_generic_transition_template',
+            'make_heat_pipe_pictures',
+            'make_laser_beam',
+            'make_laser_sounds',
+            'make_out_of_map_transition_template',
+            'make_rotated_animation_variations_from_sheet',
+            'make_unit_melee_ammo_type',
+            'make_water_autoplace_settings',
+            'make_water_transition_template',
+            'make_worm_dying_sounds',
+            'make_worm_standup_sounds',
+            'make_worm_breath',
+            'make_worm_roars',
+            'make_worm_roar_alternative',
+            'make_worm_fold_sounds',
+            'make_spitter_roars',
+            'make_biter_calls',
+            'make_spitter_dying_sounds',
+            'medium_biter_scale',
+            'medium_biter_tint1',
+            'medium_biter_tint2',
+            'notched_slider_glow',
+            'offset_by_2_default_glow',
+            'offset_by_2_rounded_corners_glow',
+            'offset_by_4_rounded_corners_subpanel_inset',
+            'orangebuttongraphcialset',
+            'out_of_map_transition_group_id',
+            'out_of_map_transition_template',
+            'outer_frame_light',
+            'outer_frame_light_blurry',
+            'patch_for_inner_corner_of_transition_between_transition',
+            'patch_opacity',
+            'pipecoverspictures',
+            'pipepictures',
+            'prepare_range_worm_behemoth',
+            'prepare_range_worm_big',
+            'prepare_range_worm_medium',
+            'prepare_range_worm_small',
+            'productivity_module_limitation',
+            'radiobutton_glow',
+            'rail_pictures',
+            'rail_pictures_internal',
+            'range_spitter_behemoth',
+            'range_spitter_big',
+            'range_spitter_medium',
+            'range_spitter_small',
+            'range_worm_behemoth',
+            'range_worm_big',
+            'range_worm_medium',
+            'range_worm_small',
+            'red_arrow_tileset',
+            'green_arrow_button_glow_color',
+            'red_button_glow_color',
+            'red_slot_glow_color',
+            'resource_autoplace',
+            'resource_autoplace__patch_metasets',
+            'right_slider_glow',
+            'robot_reflection',
+            'rolling_stock_back_light',
+            'rolling_stock_stand_by_light',
+            'rounded_button_glow',
+            'rounded_corners_glow',
+            'scale_spitter_behemoth',
+            'scale_spitter_big',
+            'scale_spitter_medium',
+            'scale_spitter_small',
+            'scale_spitter_stream',
+            'scale_worm_behemoth',
+            'scale_worm_big',
+            'scale_worm_medium',
+            'scale_worm_small',
+            'scale_worm_stream',
+            'shadow_without_bottom',
+            'shadow_without_left',
+            'shadow_without_right',
+            'shadow_without_top',
+            'shadowtint',
+            'shift_big_worm',
+            'shift_medium_worm',
+            'shift_small_worm',
+            'small_biter_scale',
+            'small_biter_tint1',
+            'small_biter_tint2',
+            'smoke',
+            'spawner_die_animation',
+            'spawner_idle_animation',
+            'spawner_integration',
+            'spitter_alternative_attacking_animation_sequence',
+            'spitter_attack_parameters',
+            'spitter_shoot_shiftings',
+            'spitter_spawner_tint',
+            'spitter_water_reflection',
+            'spitterattackanimation',
+            'spitterdyinganimation',
+            'spitterrunanimation',
+            'splash_tint',
+            'splash_tint_spitter_behemoth',
+            'splash_tint_spitter_big',
+            'splash_tint_spitter_medium',
+            'splash_tint_spitter_small',
+            'splash_tint_worm_behemoth',
+            'splash_tint_worm_big',
+            'splash_tint_worm_medium',
+            'splash_tint_worm_small',
+            'standard_train_wheels',
+            'start_attack_frame_sequence',
+            'sticker_tint',
+            'sticker_tint_behemoth',
+            'sticker_tint_big',
+            'sticker_tint_medium',
+            'sticker_tint_small',
+            'stream_radius_spitter_behemoth',
+            'stream_radius_spitter_big',
+            'stream_radius_spitter_medium',
+            'stream_radius_spitter_small',
+            'stream_radius_worm_behemoth',
+            'stream_radius_worm_big',
+            'stream_radius_worm_medium',
+            'stream_radius_worm_small',
+            'stream_scale_spitter_behemoth',
+            'stream_scale_spitter_big',
+            'stream_scale_spitter_medium',
+            'stream_scale_spitter_small',
+            'stream_scale_worm_behemoth',
+            'stream_scale_worm_big',
+            'stream_scale_worm_medium',
+            'stream_scale_worm_small',
+            'stream_tint',
+            'stream_tint_spitter_behemoth',
+            'stream_tint_spitter_big',
+            'stream_tint_spitter_medium',
+            'stream_tint_spitter_small',
+            'stream_tint_worm_behemoth',
+            'stream_tint_worm_big',
+            'stream_tint_worm_medium',
+            'stream_tint_worm_small',
+            'tab_glow',
+            'tabbed_pane_graphical_set',
+            'technology_slot_base_height',
+            'technology_slot_base_width',
+            'textbox_dirt',
+            'tile_variations_template',
+            'tint_1_spitter_behemoth',
+            'tint_1_spitter_big',
+            'tint_1_spitter_medium',
+            'tint_1_spitter_small',
+            'tint_2_spitter_behemoth',
+            'tint_2_spitter_big',
+            'tint_2_spitter_medium',
+            'tint_2_spitter_small',
+            'tint_worm_behemoth',
+            'tint_worm_big',
+            'tint_worm_medium',
+            'tint_worm_small',
+            'top_and_bottom_inner_glow',
+            'top_bottom_glow',
+            'top_bottom_shadow',
+            'top_glow',
+            'top_glow_with_left_corner',
+            'top_left_glow',
+            'top_left_glow_with_top_corner',
+            'top_left_shadow',
+            'top_left_shadow_with_top_corner',
+            'top_right_glow',
+            'top_right_glow_with_top_corner',
+            'top_right_shadow',
+            'top_right_shadow_with_top_corner',
+            'top_shadow',
+            'top_shadow_with_left_corner',
             'transport_belt_circuit_wire_max_distance',
+            'transport_belt_connector_frame_sprites',
+            'tree_01_reflection',
+            'tree_02_reflection',
+            'tree_03_reflection',
+            'tree_04_reflection',
+            'tree_05_reflection',
+            'tree_06_reflection',
+            'tree_07_reflection',
+            'tree_08_reflection',
+            'tree_09_reflection',
+            'universal_connector_template',
+            'warning_red_color',
+            'water_tile_type_names',
+            'water_transition_group_id',
+            'water_transition_template',
+            'waterparticlescale',
+            'watertint',
+            'worm_die_animation',
+            'worm_end_attack_animation',
+            'worm_folded_animation',
+            'worm_integration',
+            'worm_prepared_alternative_animation',
+            'worm_prepared_animation',
+            'worm_preparing_animation',
+            'worm_shoot_shiftings',
+            'worm_start_attack_animation'
+        }
+    }
+
+    stds.factorio_silo_script = {
+        globals = {'silo_script', 'update_players', 'get_sprite_button', 'toggle_frame', 'migrate', 'gui_update', 'get_tracked_items'}
+    }
+
+    stds.factorio_control_globals ={
+        globals = {
+            'main_player',
+            'story_init',
+            'story_update',
+            'story_table',
+            'set_goal',
+            'story_elapsed_check',
+            'set_info',
+            'story_init_helpers',
+            'story_update_table',
+            'make_helpers',
+            'story_on_tick',
+            'story_show_message_dialog',
+            'player_set_goal',
+            'on_player_joined',
+            'player_set_info',
+            'limit_camera',
+            'find_gui_recursive',
+            'add_button',
+            'export_entities',
+            'recreate_entities',
+            'flash_goal',
+            'player',
+            'surface',
+            'deconstruct_on_tick',
+            'flying_congrats',
+            'story_gui_click',
+            'story_check_passed',
+            'on_gui_click',
+            'set_continue_button_style',
+            'recreate_entities_on_tick',
+            'story_add_update',
+            'story_remove_update',
+            'story_jump_to',
+            'story_elapsed'
         }
     }
 end
 
-do -- STDLIB STDs--
+do -- STD STDLIB--
     stds.stdlib = {
         read_globals = {},
         globals = {
@@ -706,9 +975,7 @@ do -- STDLIB STDs--
             'CATEGORY'
         }
     }
-end
 
-do -- Love STDs
     stds.love_extra = {
         read_globals = {
             love = {
@@ -740,7 +1007,7 @@ do -- Love STDs
     }
 end
 
-do -- Factorio Defines STDs--
+do -- STD Factorio Defines--
     stds.factorio_defines = {
         read_globals = {
             defines = {
@@ -1020,6 +1287,7 @@ do -- Factorio Defines STDs--
                     },
                     distraction = {
                         fields = {
+                            'none',
                             'by_enemy',
                             'by_anything',
                             'by_damage'
@@ -1229,6 +1497,7 @@ do -- Factorio Defines STDs--
                     },
                     gui_type = {
                         fields = {
+                            'none',
                             'entity',
                             'research',
                             'controller',
