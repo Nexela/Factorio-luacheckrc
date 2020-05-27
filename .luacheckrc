@@ -66,7 +66,10 @@ do -- Assume Factorio Control Stage as Default
         '**/trailer/',
 
         --Ignore love Includes
-        '**/love/includes/'
+        '**/love/includes/',
+
+        --Ignore luaunit 'executable'--
+        '**/luaunit.lua'
     }
 end
 
