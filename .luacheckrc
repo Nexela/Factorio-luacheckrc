@@ -213,7 +213,7 @@ do -- Factorio STDs--
                 fields = {
                     "on_event", "on_nth_tick", "on_configuration_changed", "on_init", "on_load", "generate_event_name",
                     "raise_event", "get_event_handler", "mod_name", "get_event_order",
-                    "is_game_in_debug_mode", "object_name", "set_event_filter", "get_event_filter",
+                    "is_game_in_debug_mode", "object_name", "set_event_filter", "get_event_filter", "register_on_entity_destroyed",
                     active_mods = {read_only = true, other_fields = true},
                 },
                 other_fields = false,
@@ -1053,11 +1053,14 @@ do -- Factorio Defines STDs--
                     events = {
                         fields = {
                             'on_tick',
+                            'on_cutscene_cancelled',
+                            'on_cutscene_waypoint_reached',
                             'on_gui_click',
                             'on_gui_confirmed',
                             'on_gui_text_changed',
                             'on_gui_checked_state_changed',
                             'on_entity_died',
+                            'on_entity_destroyed',
                             'on_post_entity_died',
                             'on_entity_damaged',
                             'on_picked_up_item',
@@ -1120,6 +1123,7 @@ do -- Factorio Defines STDs--
                             'on_surface_deleted',
                             'on_pre_surface_deleted',
                             'on_player_mined_entity',
+                            'on_player_configured_spider_remote',
                             'on_robot_mined_entity',
                             'on_train_created',
                             'on_gui_elem_changed',
@@ -1149,6 +1153,7 @@ do -- Factorio Defines STDs--
                             'on_character_corpse_expired',
                             'on_pre_ghost_deconstructed',
                             'on_player_pipette',
+                            'on_player_used_spider_remote',
                             'on_player_display_resolution_changed',
                             'on_player_display_scale_changed',
                             'on_pre_player_crafted_item',
@@ -1201,7 +1206,16 @@ do -- Factorio Defines STDs--
                             'on_force_cease_fire_changed',
                             'on_force_friends_changed',
                             'on_string_translated',
-                            'on_script_trigger_effect'
+                            'on_script_trigger_effect',
+                            'on_spider_command_completed',
+                            'on_permission_group_edited',
+                            'on_pre_permission_string_imported',
+                            'on_permission_string_imported',
+                            'on_pre_permission_group_deleted',
+                            'on_permission_group_deleted',
+                            'on_permission_group_added',
+                            'on_player_flushed_fluid',
+                            'on_player_clicked_gps_tag'
                         }
                     },
                     flow_precision_index = {
