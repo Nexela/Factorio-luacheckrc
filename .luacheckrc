@@ -1067,7 +1067,7 @@ do -- Factorio Defines STDs--
                             'on_built_entity',
                             'on_sector_scanned',
                             'on_player_mined_item',
-                            'on_put_item',
+                            'on_pre_build',
                             'on_rocket_launched',
                             'on_pre_player_mined_item',
                             'on_chunk_generated',
