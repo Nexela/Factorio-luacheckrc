@@ -165,6 +165,10 @@ do -- Factorio STDs--
                 other_fields = true,
                 read_only = false
             },
+            __Profiler = {
+                other_fields = true,
+                read_only = false
+            },
             util = {
                 fields = {
                     "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
