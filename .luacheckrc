@@ -28,7 +28,7 @@
 ------------------------------------------------------------------------------]]
 local LINE_LENGTH = false
 
-local IGNORE = {'21./%w+_$', '21./^_%w+$', '213/[ijk]', '213/index', '213/key'}
+local IGNORE = {'21./%w+_$', '21./^_[_%w]+$', '213/^%a$', '213/index', '213/key'}
 
 -- These globals are not available to the factorio API
 local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}
@@ -173,7 +173,8 @@ do -- Factorio STDs--
                 fields = {
                     "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
                     "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "conditional_return",
-                    "add_shift", "merge", "premul_color", "encode", "decode", "insert_safe",
+                    "add_shift", "merge", "premul_color", "encode", "decode", "insert_safe", "mul_shift", "add_shift_offset",
+                    "multiply_color",
                     table = {
                         fields = {
                             "compare", "deepcopy"
