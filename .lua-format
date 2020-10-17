@@ -3,7 +3,7 @@ indent_width: 4
 use_tab: false
 tab_width: 4
 continuation_indent_width: 4
-spaces_before_call: 1
+spaces_before_call: 0
 keep_simple_control_block_one_line: true
 keep_simple_function_one_line: true
 align_args: false
