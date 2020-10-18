@@ -143,7 +143,7 @@ do -- Stdlib Files
     }
 
     -- Love
-    files['**/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
+    files['**/tools/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
 end
 
 do -- Factorio STDs--
