@@ -1,3 +1,4 @@
+-- luacheck: globals io
 local inspect = require('__stdlib__/stdlib/vendor/inspect')
 local defines = require('__stdlib__/faketorio/defines')
 defines.time = require('__stdlib__/stdlib/utils/defines/time')
@@ -36,4 +37,8 @@ local function parse(_defines, _field)
 end
 
 parse(defines, fields)
-print(inspect(stds))
+
+local file = io.open('defines.luacheckrc.lua', 'w')
+file:write('stds.factorio_defines = ')
+file:write(inspect(stds))
+file:close()
