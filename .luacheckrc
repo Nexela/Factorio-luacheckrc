@@ -344,6 +344,7 @@ do -- Factorio STDs--
                     'check_prototype_translations',
                     'count_pipe_groups',
                     'create_force',
+                    'create_inventory',
                     'create_profiler',
                     'create_random_generator',
                     'create_surface',
