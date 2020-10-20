@@ -28,7 +28,7 @@
 ------------------------------------------------------------------------------]]
 local LINE_LENGTH = false
 
-local IGNORE = {'21./%w+_$', '21./^_%w+$', '213/[ijk]', '213/index', '213/key'}
+local IGNORE = {'21./%w+_$', '21./^_[_%w]+$', '213/^%a$', '213/index', '213/key', '11[12]/[Tt]est[%w_]+'}
 
 -- These globals are not available to the factorio API
 local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}
@@ -66,7 +66,10 @@ do -- Assume Factorio Control Stage as Default
         '**/trailer/',
 
         --Ignore love Includes
-        '**/love/includes/'
+        '**/love/includes/',
+
+        --Ignore luaunit 'executable'--
+        '**/luaunit.lua'
     }
 end
 
@@ -140,7 +143,7 @@ do -- Stdlib Files
     }
 
     -- Love
-    files['**/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
+    files['**/tools/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
 end
 
 do -- Factorio STDs--
@@ -165,11 +168,16 @@ do -- Factorio STDs--
                 other_fields = true,
                 read_only = false
             },
+            __Profiler = {
+                other_fields = true,
+                read_only = false
+            },
             util = {
                 fields = {
                     "by_pixel", "distance", "findfirstentity", "positiontostr", "formattime", "moveposition", "oppositedirection",
                     "ismoduleavailable", "multiplystripes", "format_number", "increment", "color", "conditional_return",
-                    "add_shift", "merge", "premul_color", "encode", "decode", "insert_safe",
+                    "add_shift", "merge", "premul_color", "encode", "decode", "insert_safe", "mul_shift", "add_shift_offset",
+                    "multiply_color",
                     table = {
                         fields = {
                             "compare", "deepcopy"
@@ -336,6 +344,7 @@ do -- Factorio STDs--
                     'check_prototype_translations',
                     'count_pipe_groups',
                     'create_force',
+                    'create_inventory',
                     'create_profiler',
                     'create_random_generator',
                     'create_surface',
