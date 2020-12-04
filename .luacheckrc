@@ -55,11 +55,10 @@ do -- Assume Factorio Control Stage as Default
 
     -- List of files and directories to exclude
     exclude_files = {
-        -- Ignore special folders
-        '**/.trash/', '**/.history/', '**/stdlib/vendor/', -- Ignore development mods
-        '**/combat-tester/', '**/test-maker/', '**/trailer/', -- Ignore love Includes
-        '**/love/includes/', -- Ignore luaunit 'executable'--
-        '**/luaunit.lua'
+        '**/.trash/', '**/.history/', '**/stdlib/vendor/', -- Ignore special folders
+        '**/combat-tester/', '**/test-maker/', '**/trailer/', -- Ignore development mods
+        '**/love/includes/', -- Ignore love Includes
+        '**/luaunit.lua' -- Ignore luaunit 'executable'--
     }
 end
 
@@ -72,6 +71,7 @@ do -- Set default prototype files
     files['**/settings-final-fixes.lua'].std = STD_DATA
     files['**/prototypes/'].std = STD_DATA
     files['**/settings/'].std = STD_DATA
+    files['**/instrument-after-data/'].std = STD_DATA
 end
 
 do -- Base and Core mod files
