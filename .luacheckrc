@@ -916,7 +916,7 @@ do -- Factorio Defines STDs--
                     train_state = {
                         fields = {
                             'no_path', 'manual_control', 'manual_control_stop', 'on_the_path', 'wait_station',
-                            'no_schedule', 'wait_signal', 'arrive_station', 'arrive_signal', 'path_lost'
+                            'no_schedule', 'wait_signal', 'arrive_station', 'arrive_signal', 'path_lost', 'destination_full'
                         }
                     },
                     transport_line = {
