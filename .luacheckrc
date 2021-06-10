@@ -624,7 +624,7 @@ do -- Factorio Defines STDs--
                     },
                     anticolor = {other_fields = true},
                     behavior_result = {fields = {'success', 'in_progress', 'deleted', 'fail'}},
-                    build_check_type = {fields = {'script', 'manual', 'ghost_revive', 'ghost_place'}},
+                    build_check_type = {fields = {'script', 'manual', 'manual_ghost', 'script_ghost', 'blueprint_ghost', 'ghost_revive'}},
                     chain_signal_state = {fields = {'partially_open', 'none_open', 'none', 'all_open'}},
                     chunk_generated_status = {
                         fields = {'basic_tiles', 'corrected_tiles', 'entities', 'nothing', 'tiles', 'custom_tiles'}
