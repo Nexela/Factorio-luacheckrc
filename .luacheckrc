@@ -28,13 +28,13 @@
 ----------------------------------------------------------------------------]]--
 local LINE_LENGTH = false
 
-local IGNORE = {'21./%w+_$', '21./^_[_%w]+$', '213/^%a$', '213/index', '213/key', '11[12]/[Tt]est[%w_]+'}
+local IGNORE = {'111/__', '21./%w+_$', '21./^_[_%w]+$', '213/^%a$', '213/index', '213/key', '11[12]/[Tt]est[%w_]+'}
 
 -- These globals are not available to the factorio API
 local NOT_GLOBALS = {'coroutine', 'io', 'socket', 'dofile', 'loadfile'}
 
 local STD_CONTROL = 'lua52+factorio+factorio_control+stdlib+factorio_defines'
-local STD_DATA = 'lua52+factorio+factorio_data+stdlib+stdlib_data+factorio_defines'
+local STD_DATA = 'lua52+factorio+factorio_data+stdlib+stdlib_data+factorio_defines+factorio_base_data_common'
 
 -- For Base and Core Mods
 local STD_BASE_DATA = 'lua52+factorio+factorio_data+factorio_defines+factorio_base_data'
@@ -70,8 +70,11 @@ do -- Set default prototype files
     files['**/settings-updates.lua'].std = STD_DATA
     files['**/settings-final-fixes.lua'].std = STD_DATA
     files['**/prototypes/'].std = STD_DATA
+    files['**/data/'].std = STD_DATA
     files['**/settings/'].std = STD_DATA
-    files['**/instrument-after-data/'].std = STD_DATA
+    files['**/instrument-after-data.lua'].std = STD_DATA
+    files['**/compatibility/'].std = STD_DATA
+    files['**/lib/data*'].std = STD_DATA
 end
 
 do -- Base and Core mod files
@@ -499,6 +502,12 @@ do -- Factorio Base/Core STDs--
             'clear_rails', 'chest', 'damage', 'furnace', 'init_prototypes', 'build_infi_table', 'junk',
             'update_player_tags', 'time_left', 'team_production', 'create_task_frame', 'create_visibilty_buttons',
             'update_leaderboard', 'in_in_area'
+        }
+    }
+
+    stds.factorio_base_data_common = {
+        globals = {
+            'circuit_connector_definitions', 'logistic_chest_opened_duration'
         }
     }
 
