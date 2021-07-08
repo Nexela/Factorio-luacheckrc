@@ -200,8 +200,8 @@ do -- Factorio STDs--
                 fields = {
                     'get_player_settings',
                     startup = {other_fields = true},
-                    global = {other_fields = true},
-                    player = {other_fields = true},
+                    global = {other_fields = true, read_only = false},
+                    player = {other_fields = true, read_only = false},
                     get = {read_only = false}, -- stdlib added
                     get_startup = {read_only = false} -- stdlib added
                 }
