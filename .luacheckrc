@@ -226,6 +226,10 @@ do -- Factorio STDs--
                     'set_event_filter',
                     'get_event_filter',
                     'register_on_entity_destroyed',
+                    level = {
+                      fields = {'is_simulation', 'is_tutorial', 'campaign_name', 'level_name', 'mod_name'},
+                      read_only = true
+                    },
                     active_mods = {read_only = true, other_fields = true}
                 },
                 other_fields = false
