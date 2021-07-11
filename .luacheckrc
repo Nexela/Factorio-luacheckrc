@@ -268,7 +268,11 @@ do -- Factorio STDs--
                     'set_sprite', 'get_x_scale', 'set_x_scale', 'get_y_scale', 'set_y_scale', 'get_render_layer',
                     'set_render_layer', 'get_orientation_target', 'set_orientation_target', 'get_oriented_offset',
                     'set_oriented_offset', 'get_intensity', 'set_intensity', 'get_minimum_darkness',
-                    'set_minimum_darkness'
+                    'set_minimum_darkness', 'get_visible', 'set_visible', 'get_draw_on_ground', 'set_draw_on_ground',
+                    'bring_to_front', 'get_only_in_alt_mode', 'set_only_in_alt_mode', 'get_dash_length',
+                    'set_dash_length', 'set_dashes', 'get_vertical_alignment', 'set_vertical_alignment', 'set_corners',
+                    'get_animation', 'set_animation', 'get_animation_speed', 'set_animation_speed',
+                    'get_animation_offset', 'set_animation_offset', 'object_name'
                 }
             },
 
