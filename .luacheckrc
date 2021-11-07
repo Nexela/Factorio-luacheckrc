@@ -182,6 +182,8 @@ do -- Factorio STDs--
                     'mul_shift',
                     'add_shift_offset',
                     'multiply_color',
+                    'technology_icon_constant_range',
+                    'technology_icon_constant_movement_speed',
                     table = {fields = {'compare', 'deepcopy'}}
                 }
             },
