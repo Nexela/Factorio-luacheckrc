@@ -98,7 +98,7 @@ do -- Base and Core mod files
     files['**/core/lualib/builder.lua'] = {globals = {'Builder', 'builder', 'action', 'down', 'right'}}
 
     files['**/core/lualib/bonus-gui-ordering.lua'] = {std = STD_BASE_DATA}
-    files['**/core/lualib/collision-mask-util.lua'] {std = STD_BASE_DATA}
+    files['**/core/lualib/collision-mask-util.lua'] = {std = STD_BASE_DATA}
     files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
     files['**/core/lualib/circuit-connector-*'] = {std = STD_BASE_DATA .. '+factorio_circuit_connector_generated'}
     files['**/core/lualib/bonus-gui-ordering.lua'] = {globals = {'bonus_gui_ordering'}}
