@@ -92,17 +92,13 @@ do -- Base and Core mod files
 
     files['**/core/lualib/'] = {std = STD_BASE_CONTROL}
     files['**/core/lualib/util.lua'] = {globals = {'util', 'table'}, ignore = {'432/object'}}
-    files['**/core/lualib/silo-script.lua'] = {globals = {'silo_script'}, ignore = {'4../player'}}
-    files['**/core/lualib/production-score.lua'] = {
-        globals = {'production_score', 'get_price_recursive'},
-        ignore = {'4../player'}
-    }
+    files['**/core/lualib/silo-script.lua'] = {ignore = {'4../player'}}
+    files['**/core/lualib/production-score.lua'] = {ignore = {'4../player'}}
     files['**/core/lualib/story*'] = {std = '+factorio_base_story', ignore = {'42./k', '42./filter'}}
-    files['**/core/lualib/mod-gui.lua'] = {globals = {'mod_gui'}}
-    files['**/core/lualib/camera.lua'] = {globals = {'camera'}}
     files['**/core/lualib/builder.lua'] = {globals = {'Builder', 'builder', 'action', 'down', 'right'}}
 
-    files['**/core/lualib/bonus-gui-ordering/'] = {std = STD_BASE_DATA}
+    files['**/core/lualib/bonus-gui-ordering.lua'] = {std = STD_BASE_DATA}
+    files['**/core/lualib/collision-mask-util.lua'] {std = STD_BASE_DATA}
     files['**/core/lualib/dataloader.lua'] = {globals = {'data'}}
     files['**/core/lualib/circuit-connector-*'] = {std = STD_BASE_DATA .. '+factorio_circuit_connector_generated'}
     files['**/core/lualib/bonus-gui-ordering.lua'] = {globals = {'bonus_gui_ordering'}}
@@ -160,30 +156,21 @@ do -- Factorio STDs--
             __Profiler = {other_fields = true, read_only = false},
             util = {
                 fields = {
-                    'by_pixel',
-                    'distance',
-                    'findfirstentity',
-                    'positiontostr',
-                    'formattime',
-                    'moveposition',
-                    'oppositedirection',
-                    'ismoduleavailable',
-                    'multiplystripes',
-                    'format_number',
-                    'increment',
-                    'color',
-                    'conditional_return',
-                    'add_shift',
-                    'merge',
-                    'premul_color',
-                    'encode',
-                    'decode',
-                    'insert_safe',
-                    'mul_shift',
-                    'add_shift_offset',
-                    'multiply_color',
-                    'technology_icon_constant_range',
-                    'technology_icon_constant_movement_speed',
+                    'multiplystripes', 'remove_safe', 'mix_color', 'list_to_map', 'combine_icons',
+                    'conditional_return', 'mul_shift', 'draw_as_glow', 'parse_energy',
+                    'string_starts_with', 'by_pixel', 'foreach_sprite_definition', 'distance',
+                    'insert_safe', 'split', 'copy', 'technology_icon_constant_range', 'add_shift',
+                    'premul_color', 'split_whitespace', 'empty_sprite', 'remove_from_list',
+                    'increment', 'remove_tile_references', 'oppositedirection',
+                    'technology_icon_constant_followers', 'technology_icon_constant_braking_force',
+                    'technology_icon_constant_damage', 'positiontostr', 'technology_icon_constant_mining',
+                    'technology_icon_constant_productivity', 'by_pixel_hr',
+                    'technology_icon_constant_capacity', 'product_amount', 'color',
+                    'get_color_with_alpha', 'clamp', 'technology_icon_constant_equipment',
+                    'technology_icon_constant_movement_speed', 'technology_icon_constant_speed', 'merge',
+                    'get_walkable_tile', 'moveposition', 'online_players',
+                    'technology_icon_constant_stack_size', 'multiply_color', 'format_number',
+                    'add_shift_offset', 'formattime',
                     table = {fields = {'compare', 'deepcopy'}}
                 }
             },
@@ -414,34 +401,35 @@ do -- Factorio STDs--
             -- @global@: The global dictionary, useful for storing data persistent across a save-load cycle.
             -- Writing access is given to the mod-id field (for mod-wise saved data).
             -- (http://lua-api.factorio.com/latest/Global.html)
-            'global',
-
-            -- @MOD@: Keep it organized, use this variable for anything that "NEEDS" to be global for some reason.
-            'MOD'
+            'global'
         }
     }
 
     stds.factorio_data = {
 
         read_globals = {
-            data = {fields = {raw = {other_fields = true, read_only = false}, 'extend', 'is_demo'}},
-
-            settings = {fields = {'startup', 'global', 'player', 'get', 'get_startup'}},
-
+            data = {
+                fields = {
+                    'extend', 'is_demo',
+                    raw = {other_fields = true, read_only = false}
+                }
+            },
+            settings = {
+                fields = {
+                    'startup', 'global', 'player'
+                }
+            },
             mods = {other_fields = true},
 
             -- Popular mods that think they need globals!
             angelsmods = {other_fields = true},
-
-            -- Popular mods that think they need globals!
             bobmods = {other_fields = true}
-
         }
     }
 end
 
 do -- Factorio Base/Core STDs--
-    stds.factorio_base_control = {read_globals = {'silo_script', 'mod_gui', 'camera'}}
+    stds.factorio_base_control = {}
 
     stds.factorio_base_scenarios = {
         globals = {
