@@ -135,7 +135,7 @@ do -- Stdlib Files
     files['**/tools/love/'].std = 'luajit+love+love_extra+stdlib+stdlib_data'
 end
 
-do -- Factorio STDs--
+do -- Factorio STDs
     stds.factorio = {
         -- Set the read only variables
         read_globals = {
@@ -191,8 +191,6 @@ do -- Factorio STDs--
                     startup = {other_fields = true},
                     global = {other_fields = true, read_only = false},
                     player = {other_fields = true, read_only = false},
-                    get = {read_only = false}, -- stdlib added
-                    get_startup = {read_only = false} -- stdlib added
                 }
             },
 
@@ -428,7 +426,7 @@ do -- Factorio STDs--
     }
 end
 
-do -- Factorio Base/Core STDs--
+do -- Factorio Base/Core STDs
     stds.factorio_base_control = {}
 
     stds.factorio_base_scenarios = {
@@ -585,7 +583,7 @@ do -- Factorio Base/Core STDs--
     }
 end
 
-do -- STDLIB STDs--
+do -- STDLIB STDs
     stds.stdlib = {
         read_globals = {},
         globals = {
@@ -617,7 +615,7 @@ do -- Love STDs
     }
 end
 
-do -- Factorio Defines STDs--
+do -- Factorio Defines STDs
     stds.factorio_defines = {
         read_globals = {
             defines = {
@@ -939,4 +937,4 @@ do -- Factorio Defines STDs--
             }
         }
     }
-end
+end -- Factorio Defines STDs
