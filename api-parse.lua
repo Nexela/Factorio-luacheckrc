@@ -74,26 +74,25 @@ do -- Classes
                 -- api.classes[40].attributes[] name read write type/complex_type
                 if attribute.name == 'object_name' then
                     stds.fields[#stds.fields + 1] = attribute.name
-                    break
-                end
+                else
+                    stds.fields[attribute.name] = {}
+                    local field = stds.fields[attribute.name]
 
-                stds.fields[attribute.name] = {}
-                local field = stds.fields[attribute.name]
-
-                if attribute.write then
-                    field.read_only = false
-                end
-
-                if type(attribute.type) == 'table' then
-                    for _, param in pairs(attribute.type.parameters or {}) do
-                        field.fields = field.fields or {}
-                        field.fields[#field.fields + 1] = param.name
+                    if attribute.write then
+                        field.read_only = false
                     end
-                    if attribute.type.complex_type ~= 'table' then
+
+                    if type(attribute.type) == 'table' then
+                        for _, param in pairs(attribute.type.parameters or {}) do
+                            field.fields = field.fields or {}
+                            field.fields[#field.fields + 1] = param.name
+                        end
+                        if attribute.type.complex_type ~= 'table' then
+                            field.other_fields = true
+                        end
+                    elseif attribute.type:find('^Lua') or attribute.type:find('Settings') then
                         field.other_fields = true
                     end
-                elseif attribute.type:find('^Lua') or attribute.type:find('Settings') then
-                    field.other_fields = true
                 end
             end
         end

@@ -245,7 +245,27 @@ do -- Factorio STDs
                 mod_setting_prototypes = { other_fields = true },
                 module_category_prototypes = { other_fields = true },
                 named_noise_expressions = { other_fields = true },
-                noise_layer_prototypes = { other_fields = true }
+                noise_layer_prototypes = { other_fields = true },
+                particle_prototypes = { other_fields = true },
+                permissions = { other_fields = true },
+                player = { other_fields = true },
+                players = { other_fields = true },
+                pollution_statistics = { other_fields = true },
+                recipe_category_prototypes = { other_fields = true },
+                recipe_prototypes = { other_fields = true },
+                resource_category_prototypes = { other_fields = true },
+                shortcut_prototypes = { other_fields = true },
+                speed = { read_only = false },
+                styles = { other_fields = true },
+                surfaces = { other_fields = true },
+                technology_prototypes = { other_fields = true },
+                tick = {},
+                tick_paused = { read_only = false },
+                ticks_played = {},
+                ticks_to_run = { read_only = false },
+                tile_prototypes = { other_fields = true },
+                trivial_smoke_prototypes = { other_fields = true },
+                virtual_signal_prototypes = { other_fields = true }
             }
         }
 
@@ -282,9 +302,10 @@ do -- Factorio STDs
         LuaSettings = {
             fields = {
                 'get_player_settings',
-                startup = { other_fields = true },
-                global = { other_fields = true, read_only = false },
-                player = { other_fields = true, read_only = false }
+                'object_name',
+                global = { other_fields = true },
+                player = { other_fields = true },
+                startup = { other_fields = true }
             }
         }
 
