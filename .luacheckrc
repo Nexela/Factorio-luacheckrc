@@ -356,7 +356,8 @@ do -- Factorio STDs
             script = LuaBootstrap,
             rcon = LuaRcon,
             rendering = LuaRendering,
-            game = LuaGameScript
+            game = LuaGameScript,
+            remote = LuaRemote
         },
         globals = { 'global' }
     }
