@@ -52,10 +52,8 @@ do -- Setup
 
         -- List of files and directories to exclude
         exclude_files = {
-            '**/.trash/', '**/.history/', '**/stdlib/vendor/', -- Ignore special folders
-            '**/combat-tester/', '**/test-maker/', '**/trailer/', -- Ignore development mods
-            '**/love/includes/', -- Ignore love Includes
-            '**/luaunit.lua' -- Ignore luaunit 'executable'--
+            '**/.trash/', '**/.history/', '**/stdlib/vendor/', '**/combat-tester/', '**/test-maker/', '**/trailer/', '**/love/includes/', '**/luaunit.lua',
+            '**/factorio-runtime-api.lua'
         }
     end
 
@@ -209,13 +207,13 @@ do -- Factorio STDs
                 autoplace_control_prototypes = { other_fields = true },
                 autosave_enabled = { read_only = false },
                 backer_names = { other_fields = true },
-                connected_players = { other_fields = true },
+                connected_players = { other_fields = true, read_only = false},
                 custom_input_prototypes = { other_fields = true },
                 damage_prototypes = { other_fields = true },
                 decorative_prototypes = { other_fields = true },
-                default_map_gen_settings = { other_fields = true },
+                default_map_gen_settings = { other_fields = true, read_only = false },
                 difficulty = {},
-                difficulty_settings = { other_fields = true },
+                difficulty_settings = { other_fields = true, read_only = false },
                 draw_resource_selection = { read_only = false },
                 enemy_has_vision_on_land_mines = { read_only = false },
                 entity_prototypes = { other_fields = true },
@@ -226,13 +224,13 @@ do -- Factorio STDs
                 finished_but_continuing = {},
                 fluid_prototypes = { other_fields = true },
                 font_prototypes = { other_fields = true },
-                forces = { other_fields = true },
+                forces = { other_fields = true, read_only = false },
                 fuel_category_prototypes = { other_fields = true },
                 item_group_prototypes = { other_fields = true },
                 item_prototypes = { other_fields = true },
                 item_subgroup_prototypes = { other_fields = true },
                 map_gen_presets = { other_fields = true },
-                map_settings = { other_fields = true },
+                map_settings = { other_fields = true, read_only = false },
                 max_beacon_supply_area_distance = {},
                 max_electric_pole_connection_distance = {},
                 max_electric_pole_supply_area_distance = {},
@@ -247,17 +245,17 @@ do -- Factorio STDs
                 named_noise_expressions = { other_fields = true },
                 noise_layer_prototypes = { other_fields = true },
                 particle_prototypes = { other_fields = true },
-                permissions = { other_fields = true },
-                player = { other_fields = true },
-                players = { other_fields = true },
-                pollution_statistics = { other_fields = true },
+                permissions = { other_fields = true, read_only = false },
+                player = { other_fields = true, read_only = false },
+                players = { other_fields = true, read_only = false },
+                pollution_statistics = { other_fields = true, read_only = false },
                 recipe_category_prototypes = { other_fields = true },
                 recipe_prototypes = { other_fields = true },
                 resource_category_prototypes = { other_fields = true },
                 shortcut_prototypes = { other_fields = true },
                 speed = { read_only = false },
                 styles = { other_fields = true },
-                surfaces = { other_fields = true },
+                surfaces = { other_fields = true, read_only = false },
                 technology_prototypes = { other_fields = true },
                 tick = {},
                 tick_paused = { read_only = false },
