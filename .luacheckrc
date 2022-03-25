@@ -53,7 +53,7 @@ do -- Setup
         -- List of files and directories to exclude
         exclude_files = {
             '**/.trash/', '**/.history/', '**/stdlib/vendor/', '**/combat-tester/', '**/test-maker/', '**/trailer/', '**/love/includes/', '**/luaunit.lua',
-            '**/factorio-runtime-api.lua'
+            '**/factorio-runtime-api.lua', '**/.io'
         }
     end
 
@@ -119,7 +119,7 @@ do -- Factorio STDs
 
     local util, LuaGameScript, LuaBootstrap, LuaRendering, LuaSettings, LuaRCON, LuaRemote, LuaCommandProcessor
     do -- local vars
-        local util = {
+        util = {
             fields = {
                 'multiplystripes', 'remove_safe', 'mix_color', 'list_to_map', 'combine_icons', 'conditional_return', 'mul_shift', 'draw_as_glow',
                 'parse_energy', 'string_starts_with', 'by_pixel', 'foreach_sprite_definition', 'distance', 'insert_safe', 'split', 'copy',
