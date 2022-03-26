@@ -53,7 +53,7 @@ do -- Setup
         -- List of files and directories to exclude
         exclude_files = {
             '**/.trash/', '**/.history/', '**/stdlib/vendor/', '**/combat-tester/', '**/test-maker/', '**/trailer/', '**/love/includes/', '**/luaunit.lua',
-            '**/factorio-runtime-api.lua', '**/.io'
+            '**/factorio-runtime-api.lua', '**/.io', '**/docs/'
         }
     end
 
@@ -70,6 +70,7 @@ do -- Setup
         files['**/instrument-after-data.lua'].std = FACTORIO_DATA
         files['**/compatibility/'].std = FACTORIO_DATA
         files['**/lib/data*'].std = FACTORIO_DATA
+        files['**/*_nolint*'] = { ignore = { '...' } }
     end
 
     do -- Base and Core mod files
