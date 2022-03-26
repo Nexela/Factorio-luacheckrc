@@ -2,6 +2,7 @@ local lunajson = require('lunajson')
 local lfs = require('lfs')
 local lxsh = require 'lxsh'
 local inspect = require('inspect')
+local serpent = require('serpent')
 local https = require('ssl.https')
 
 -- Hack needed for act-boy debugger until I figure out a way to set the CWD correctly through config
@@ -32,24 +33,52 @@ local function write_output_file(output_file_name, key, stds)
     outfile:close()
 end
 
+local function dump_defines(tab)
+    local output_file_name = '.io/defines.lua'
+    local outfile = assert(io.open(output_file_name, 'w'))
+    outfile:write(serpent.dump(tab, {name = 'defines'}))
+    outfile:flush()
+    os.execute('lua-format -i ' .. output_file_name) -- Can we do this without a file?
+    outfile:close()
+end
+
 do -- Parse and write out the defines into luacheck format
     local stds = { read_globals = { defines = { fields = {} } } }
+    local lua_defines = {}
     local fields = stds.read_globals.defines.fields
 
     stds.__VERSION = api.application_version
-    local function parse(defines, cur_fields)
-        for _, define in pairs(defines) do
+    local function parse_defines_stds(tab, cur_fields)
+        for _, define in pairs(tab) do
             if define.name == 'prototypes' then
                 cur_fields['prototypes'] = { other_fields = true }
             elseif define.values or define.subkeys then
                 cur_fields[define.name] = { fields = {} }
-                parse(define.values or define.subkeys, cur_fields[define.name].fields)
+                parse_defines_stds(define.values or define.subkeys, cur_fields[define.name].fields)
             else
                 cur_fields[#cur_fields + 1] = define.name
             end
         end
     end
-    parse(api.defines, fields)
+    parse_defines_stds(api.defines, fields)
+
+    local function parse_defines(tab, next_key)
+        for index, define in pairs(tab) do
+            if define.values or define.subkeys then
+                next_key[define.name] = {}
+                parse_defines(define.values or define.subkeys, next_key[define.name])
+            else
+                if define.name == 'prototypes' then
+                    next_key['prototypes'] = {}
+                else
+                    next_key[define.name] = define.order
+                end
+            end
+        end
+    end
+    parse_defines(api.defines, lua_defines)
+
+    dump_defines(lua_defines)
 
     -- Deprecated STDLIB
     fields.color = { other_fields = true }
@@ -57,7 +86,7 @@ do -- Parse and write out the defines into luacheck format
     fields.lightcolor = { other_fields = true }
     fields.time = { 'second', 'minute', 'day', 'week', 'month', 'year' }
 
-    write_output_file('.io/defines.lua', 'stds.factorio_defines = ', stds)
+    write_output_file('.io/stds_defines.lua', 'stds.factorio_defines = ', stds)
 end
 
 do -- Classes
@@ -160,7 +189,7 @@ do -- Read .luacheckrc and write output file
         -- os.execute('lua-format -i ' .. output_file_name)
     end
 
-    -- replace_key('stds.factorio_defines =', '.io/defines.lua', '.luacheckrc')
+    -- replace_key('stds.factorio_defines =', '.io/stds_defines.lua', '.luacheckrc')
     -- replace_key('LuaGameScript =', '.io/LuaGameScript.lua', '.luacheckrc')
     -- replace_key('LuaBootstrap =', '.io/LuaBootstrap.lua', '.luacheckrc')
     -- replace_key('LuaCommandProcessor =', '.io/LuaCommandProcessor.lua', '.luacheckrc')
