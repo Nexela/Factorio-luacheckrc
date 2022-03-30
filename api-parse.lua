@@ -1,7 +1,8 @@
 local lunajson = require('lunajson')
 local lfs = require('lfs')
 local lxsh = require 'lxsh'
-local inspect = require('inspect')
+---@diagnostic disable-next-line: different-requires
+local inspect = require('inspect') -- ##
 local serpent = require('serpent')
 local https = require('ssl.https')
 
