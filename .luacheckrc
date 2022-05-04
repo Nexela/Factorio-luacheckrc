@@ -53,7 +53,7 @@ do -- Setup
         -- List of files and directories to exclude
         exclude_files = {
             '**/.trash/', '**/.history/', '**/stdlib/vendor/', '**/combat-tester/', '**/test-maker/', '**/trailer/', '**/love/includes/', '**/luaunit.lua',
-            '**/factorio-runtime-api.lua', '**/.io', '**/docs/'
+            '**/factorio-runtime-api.lua', '**/.io', '**/docs/', '**/.vscode/', '**/*luaunit.lua'
         }
     end
 
