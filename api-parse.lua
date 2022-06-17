@@ -11,6 +11,7 @@ lfs.chdir(arg[0]:gsub('api%-parse%.lua', ''))
 
 local api
 do -- Decode the api file check for local cache first
+    ---@diagnostic disable need-check-nil
     lfs.mkdir('.io')
     local api_url = 'https://lua-api.factorio.com/next/runtime-api.json'
     local api_file = io.open('.io/runtime-api.json', 'r')
@@ -23,6 +24,7 @@ do -- Decode the api file check for local cache first
 
     api = lunajson.decode(api_file:read('*a'))
     api_file:close()
+    ---@diagnostic enable need-check-nil
 end
 
 local function write_output_file(output_file_name, key, stds)
@@ -64,7 +66,7 @@ do -- Parse and write out the defines into luacheck format
     parse_defines_stds(api.defines, fields)
 
     local function parse_defines(tab, next_key)
-        for index, define in pairs(tab) do
+        for _, define in pairs(tab) do
             if define.values or define.subkeys then
                 next_key[define.name] = {}
                 parse_defines(define.values or define.subkeys, next_key[define.name])
@@ -158,6 +160,7 @@ do -- Read .luacheckrc and write output file
         return counter, 0, 0
     end
 
+    ---@diagnostic disable-next-line: unused-local
     local function replace_key(key_pattern, input_file_name, output_file_name)
         local contents = {}
         local in_block
